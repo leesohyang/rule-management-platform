@@ -13,8 +13,11 @@ import {apiProvider} from "../services/Provider";
 
 function App() {
     React.useEffect(()=>{
-        apiProvider.initHead().then(()=>console.log("initHead"))
-        apiProvider.initRelForm().then(()=>console.log("initRelForm"))
+        async function inits(){
+            apiProvider.initHead().then(()=>console.log("initHead"))
+            apiProvider.initRelForm().then(()=>console.log("initRelForm"))
+        }
+        inits().then(()=>console.log("done!"));
     }, [])
 
     return (
