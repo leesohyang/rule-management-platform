@@ -17,15 +17,15 @@ fun Route.historysLive() {
     route("/history/livedetectrule") {
 
         get("/selectall") {
-            val allHistorys = historyLiveService.selectPart()
+            val allHistorys = historyLiveService.selectAll("0", "10")
             call.respond(allHistorys)
         }
-//        // UPDATE
-        post("/updateRelease") {
-            val historyRequest = call.receive<HistoryLDR>()
-            historyLiveService.updateRelease(historyRequest)
-            call.respond(HttpStatusCode.OK)
-        }
+////        // UPDATE
+//        post("/updateRelease") {
+//            val historyRequest = call.receive<HistoryLDR>()
+//            historyLiveService.updateRelease(historyRequest, "true")
+//            call.respond(HttpStatusCode.OK)
+//        }
     }
 }
 

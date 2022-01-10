@@ -14,12 +14,12 @@ import {
 import {useDispatch} from "react-redux";
 
 
-const BASE_URL = 'http://10.250.238.177:8096/api/v1'
+const BASE_URL = 'http://10.250.238.169:8096/api/v1'
 
 function getAllRedux(type) {
     return async (dispatch) => {
         await axios
-            .get('http://10.250.238.177:8096/api/v1/' + type + '/selectall')
+            .get('http://10.250.238.169:8096/api/v1/' + type + '/selectall')
             .then(response => {
                 switch (type) {
                     case "normalizerule":
@@ -41,7 +41,7 @@ function getAllRedux(type) {
 function getNormalizeRuleFilter(obj) {
     return async (dispatch) => {
         await axios
-            .post('http://10.250.238.177:8096/api/v1/normalizerule/selectAllFilters', obj)
+            .post('http://10.250.238.169:8096/api/v1/normalizerule/selectAllFilters', obj)
             .then(response => {
                 console.log(response.data)
                 return dispatch(getAllR(response.data.slice().map(
@@ -59,7 +59,7 @@ function getNormalizeRuleFilter(obj) {
 function getNormalizeRule(offset, limit) {
     return async (dispatch) => {
         await axios
-            .get('http://10.250.238.177:8096/api/v1/normalizerule/selectall?offset=' + offset + '&limit=' + limit)
+            .get('http://10.250.238.169:8096/api/v1/normalizerule/selectall?offset=' + offset + '&limit=' + limit)
             .then(response => {
                 console.log(response.data)
                 return dispatch(getAllR(response.data.slice().map(
@@ -76,13 +76,13 @@ function getNormalizeRule(offset, limit) {
 
 async function getRowCounts(type) {
     return await axios
-        .get('http://10.250.238.177:8096/api/v1/' + type + '/getrowcount')
+        .get('http://10.250.238.169:8096/api/v1/' + type + '/getrowcount')
         .then((res) => res.data)
 }
 
 async function getFiltersCounts(type, obj) {
     return await axios
-        .post('http://10.250.238.177:8096/api/v1/' + type + '/getFiltersCount', obj)
+        .post('http://10.250.238.169:8096/api/v1/' + type + '/getFiltersCount', obj)
         .then((res) => res.data)
 }
 
@@ -91,7 +91,7 @@ async function getFiltersCounts(type, obj) {
 function getAll(type) {
     return async (dispatch) => {
         await axios
-            .get('http://10.250.238.177:8096/api/v1/' + type + '/selectall')
+            .get('http://10.250.238.169:8096/api/v1/' + type + '/selectall')
             .then(response => {
 
                 switch (type) {
@@ -114,7 +114,7 @@ function getAll(type) {
 
 async function deActiveHead() {
     return await axios
-        .get('http://10.250.238.177:8096/api/v1/header/deActive')
+        .get('http://10.250.238.169:8096/api/v1/header/deActive')
         .catch(error => {
             throw(error);
         })
@@ -123,18 +123,18 @@ async function deActiveHead() {
 async function insertHead(ob) {
 
     return await axios
-        .post('http://10.250.238.177:8096/api/v1/header/insert', ob)
+        .post('http://10.250.238.169:8096/api/v1/header/insert', ob)
 }
 
 async function activeHead(version) {
     return await axios
-        .post('http://10.250.238.177:8096/api/v1/header/active', version)
+        .post('http://10.250.238.169:8096/api/v1/header/active', version)
 }
 
 // function insertHead (ob) {
 //     return async (dispatch) => {
 //         await axios
-//             .post('http://10.250.238.177:8096/api/v1/header/insert', ob)
+//             .post('http://10.250.238.169:8096/api/v1/header/insert', ob)
 //             .then(response => {
 //                 dispatch(getHead)
 //             })
@@ -144,7 +144,7 @@ function getHeadVer(version) {
     console.log(version)
     return async (dispatch) => {
         await axios
-            .get('http://10.250.238.177:8096/api/v1/header/selectHeaderVersion?ver=' + version)
+            .get('http://10.250.238.169:8096/api/v1/header/selectHeaderVersion?ver=' + version)
             .then(response => {
                 console.log(response.data.ver); //안가네
                 const res = response.data.header.map((it) =>
@@ -161,7 +161,7 @@ function getHeadVer(version) {
 //live 되어있는 헤드 가져오기
 async function getHead() {
     return await axios
-        .get('http://10.250.238.177:8096/api/v1/header/selectheader')
+        .get('http://10.250.238.169:8096/api/v1/header/selectheader')
         .then(response => {
             const res = response.data.header.map((it) =>
                 Object.assign({}, {Header: it, accessor: it})
@@ -179,7 +179,7 @@ async function getHead() {
 
 async function getLiveRulesFilter(obj) {
         return await axios
-            .post('http://10.250.238.177:8096/api/v1/rules/selectAllFilters', obj)
+            .post('http://10.250.238.169:8096/api/v1/rules/selectAllFilters', obj)
             .then(response => {
                 const res = response.data.map(({conditions, ...other}) => {
                     const tp = {};
@@ -201,7 +201,7 @@ async function getLiveRulesFilter(obj) {
 async function getLiveRules(offset, limit) {
 
     return await axios
-        .get('http://10.250.238.177:8096/api/v1/rules/selectall?offset=' + offset + '&limit=' + limit)
+        .get('http://10.250.238.169:8096/api/v1/rules/selectall?offset=' + offset + '&limit=' + limit)
         .then(response => {
             const res = response.data.map(({conditions, ...other}) => {
                 const tp = {};
@@ -220,21 +220,21 @@ async function getLiveRules(offset, limit) {
 }
 async function upsertAndHistory(release, rules){
     return await axios
-        .post('http://10.250.238.177:8096/api/v1/rules/upsertAndHistory2?released=' + release, rules)
+        .post('http://10.250.238.169:8096/api/v1/rules/upsertAndHistory2?released=' + release, rules)
         .catch((error)=>{
             console.error(error)
         })
 }
 async function restore(rules, release){
     return await axios
-        .post('http://10.250.238.177:8096/api/v1/rules/restore?released='+ release , rules)
+        .post('http://10.250.238.169:8096/api/v1/rules/restore?released='+ release , rules)
         .catch((error)=>{
             console.error(error)
         })
 }
 async function updateRelease(){
     return await axios
-        .post('http://10.250.238.177:8096/api/v1/history/livedetectrule/updateRelease')
+        .post('http://10.250.238.169:8096/api/v1/history/livedetectrule/updateRelease')
         .catch((error)=>{
             console.error(error)
         })
@@ -242,7 +242,7 @@ async function updateRelease(){
 
 async function getReleaseForm(type) {
     return await axios
-        .get('http://10.250.238.177:8096/api/v1/' + 'releaseForm' + '/select?type=' + type)
+        .get('http://10.250.238.169:8096/api/v1/' + 'releaseForm' + '/select?type=' + type)
         .catch((error) => {
             console.error(error)
         })
@@ -251,7 +251,7 @@ async function getReleaseForm(type) {
 async function signalZk(signals) {
     console.log(signals)
     return await axios
-        .post('http://10.250.238.177:8096/api/v1/' + 'rules' + '/signal', signals)
+        .post('http://10.250.238.169:8096/api/v1/' + 'rules' + '/signal', signals)
         .catch((error) => {
             console.error(error)
         })
@@ -260,7 +260,7 @@ async function signalZk(signals) {
 async function parse(parseStr) {
     console.log({parseStr})
     return await axios
-        .post('http://10.250.238.177:8096/api/v1/normalizerule/parse', {parseStr})
+        .post('http://10.250.238.169:8096/api/v1/normalizerule/parse', {parseStr})
         .then(response => {
             console.log(response)
             return JSON.parse(decodeURIComponent(response.data.replace(/\+/g, "%20")))
@@ -274,7 +274,7 @@ async function parse(parseStr) {
 async function releaseZk(options) {
     console.log(options)
     return await axios
-        .post('http://10.250.238.177:8096/api/v1/' + 'rules' + '/zookeeper', options)
+        .post('http://10.250.238.169:8096/api/v1/' + 'rules' + '/zookeeper', options)
         .then(response => {
             console.log(response.data)
         })
@@ -287,8 +287,8 @@ async function releaseZk(options) {
 function getNodes() { //select all => table 조회 용
     return async (dispatch) => {
         await axios.all([
-            axios.get("http://10.250.238.177:8096/api/v1/node/selectall"),
-            axios.get("http://10.250.238.177:8096/api/v1/link/selectall")
+            axios.get("http://10.250.238.169:8096/api/v1/node/selectall"),
+            axios.get("http://10.250.238.169:8096/api/v1/link/selectall")
         ])
             .then(axios.spread(function (node, link) {
                 const m = {}
@@ -308,7 +308,7 @@ function getNodes() { //select all => table 조회 용
 
 function getAds(nodeId) { // select 인접 노드
     return async (dispatch) => {
-        await axios.get("http://10.250.238.177:8096/api/v1/node/selectadjacent/" + nodeId)
+        await axios.get("http://10.250.238.169:8096/api/v1/node/selectadjacent/" + nodeId)
             .then(response => {
                 dispatch(getGraphs(
                     response.data.nodes,
@@ -324,7 +324,7 @@ function getAds(nodeId) { // select 인접 노드
 
 async function getAds2(nodeId) {
     return await axios
-        .get("http://10.250.238.177:8096/api/v1/node/selectadjacent/" + nodeId)
+        .get("http://10.250.238.169:8096/api/v1/node/selectadjacent/" + nodeId)
         .then(response => {
             return response.data
         })
@@ -335,7 +335,7 @@ async function getAds2(nodeId) {
 
 async function getRow(type, id) {
     return await axios
-        .get('http://10.250.238.177:8096/api/v1/' + type + '/select?id=' + id)
+        .get('http://10.250.238.169:8096/api/v1/' + type + '/select?id=' + id)
         .then(response => {
             console.log([...response.data].shift())
             return [...response.data].shift();
@@ -348,7 +348,7 @@ async function getRow(type, id) {
 function getTemp(type) {
     return (dispatch) => {
         axios
-            .get('http://10.250.238.177:8096/api/v1/template/selectbytype?node=' + type)
+            .get('http://10.250.238.169:8096/api/v1/template/selectbytype?node=' + type)
             .then(response => {
                 dispatch(getTmp(response.data))
             })
@@ -361,7 +361,7 @@ function getTemp(type) {
 
 async function getTypes(type) {
     return await axios
-        .get("http://10.250.238.177:8096/api/v1/template/entitytypes?node=" + type)
+        .get("http://10.250.238.169:8096/api/v1/template/entitytypes?node=" + type)
         .catch((error) => {
             console.error(error)
         })
@@ -369,7 +369,7 @@ async function getTypes(type) {
 
 async function getVendors(enType) {
     return await axios
-        .get("http://10.250.238.177:8096/api/v1/template/vendors?entity=" + enType)
+        .get("http://10.250.238.169:8096/api/v1/template/vendors?entity=" + enType)
         .catch((error) => {
             console.error(error)
         })
@@ -377,7 +377,7 @@ async function getVendors(enType) {
 
 async function getModels(enType, venType) {
     return await axios
-        .get("http://10.250.238.177:8096/api/v1/template/models?entity=" + enType + "&vendor=" + venType)
+        .get("http://10.250.238.169:8096/api/v1/template/models?entity=" + enType + "&vendor=" + venType)
         .catch((error) => {
             console.error(error)
         })
@@ -386,7 +386,7 @@ async function getModels(enType, venType) {
 // 추가 가능한 entity list 조회
 async function getEna(enType) {
     return await axios
-        .get("http://10.250.238.177:8096/api/v1/asset/selectbyquery?entityType=" + enType)
+        .get("http://10.250.238.169:8096/api/v1/asset/selectbyquery?entityType=" + enType)
         .catch((error) => {
             console.error(error)
         })
@@ -394,7 +394,7 @@ async function getEna(enType) {
 
 async function getEnd(enType, venType, moType) {
     return await axios
-        .get("http://10.250.238.177:8096/api/v1/device/selectbyquery?entityType=" + enType + "&vendor=" + venType + "&model=" + moType)
+        .get("http://10.250.238.169:8096/api/v1/device/selectbyquery?entityType=" + enType + "&vendor=" + venType + "&model=" + moType)
         .catch((error) => {
             console.error(error)
         })
@@ -403,7 +403,7 @@ async function getEnd(enType, venType, moType) {
 async function insertLink(ob) {
 
     return await axios
-        .post('http://10.250.238.177:8096/api/v1/link/insert', ob)
+        .post('http://10.250.238.169:8096/api/v1/link/insert', ob)
         .then(response => {
             console.log(response)
         })
@@ -425,7 +425,7 @@ async function insertLiveDetect(ob, version) {
     })(ob)
     res['conditions'] = con
     return await axios
-        .post('http://10.250.238.177:8096/api/v1/rules/insert', res)
+        .post('http://10.250.238.169:8096/api/v1/rules/insert', res)
         .then(() => console.log("hi"))
         .catch((error) => {
             console.error(error)
@@ -438,7 +438,7 @@ async function insert(type, ob) {
     // console.log(typeof sob.value)
     console.log(sob)
     return await axios
-        .post('http://10.250.238.177:8096/api/v1/' + type + '/insert', sob)
+        .post('http://10.250.238.169:8096/api/v1/' + type + '/insert', sob)
         .catch((error) => {
             console.error(error)
         })
@@ -453,7 +453,7 @@ async function insertNormal(ob) {
     })(ob)
     console.log(sob)
     return await axios
-        .post('http://10.250.238.177:8096/api/v1/normalizerule/upsertall', sob)
+        .post('http://10.250.238.169:8096/api/v1/normalizerule/upsertall', sob)
         .catch((error) => {
             console.error(error)
         })
@@ -465,7 +465,7 @@ async function insertNormalTotal(ob) {
     })(ob)
     console.log(sob)
     return await axios
-        .post('http://10.250.238.177:8096/api/v1/normalizerule/upsert', sob)
+        .post('http://10.250.238.169:8096/api/v1/normalizerule/upsert', sob)
         .catch((error) => {
             console.error(error)
         })
@@ -473,7 +473,7 @@ async function insertNormalTotal(ob) {
 
 async function setHistory() {
     return await axios
-        .get("http://10.250.238.177:8096/api/v1/normalizerule/selectall/tohistory")
+        .get("http://10.250.238.169:8096/api/v1/normalizerule/selectall/tohistory")
         .then((response) => console.log(response.data))
         .catch((error) => {
             console.error(error)
@@ -482,7 +482,7 @@ async function setHistory() {
 
 async function getNextVal() {
     return await axios
-        .get("http://10.250.238.177:8096/api/v1/normalizerule/nextid")
+        .get("http://10.250.238.169:8096/api/v1/normalizerule/nextid")
         .catch((error) => {
             console.error(error)
         })
@@ -490,7 +490,7 @@ async function getNextVal() {
 
 async function getNextId() {
     return await axios
-        .get("http://10.250.238.177:8096/api/v1/rules/next_id")
+        .get("http://10.250.238.169:8096/api/v1/rules/next_id")
         .then((res)=> res.data)
         .catch((error) => {
             console.error(error)
@@ -502,7 +502,7 @@ async function update(type, ob) {
     const sob = (({createdAt, updatedAt, ...other}) => other)(ob)
 
     return await axios
-        .post('http://10.250.238.177:8096/api/v1/' + type + '/update', sob)
+        .post('http://10.250.238.169:8096/api/v1/' + type + '/update', sob)
         .catch((error) => {
             console.error(error)
         })
@@ -511,7 +511,7 @@ async function update(type, ob) {
 async function del(type, ids) {
     console.log(ids)
     return await axios
-        .delete('http://10.250.238.177:8096/api/v1/' + type + '/delete', {
+        .delete('http://10.250.238.169:8096/api/v1/' + type + '/delete', {
             headers: {'Content-Type': 'application/json'},
             data: ids
         })
@@ -522,7 +522,7 @@ async function del(type, ids) {
 
 async function delNormal(type, id) {
     return await axios
-        .delete('http://10.250.238.177:8096/api/v1/' + type + '/delete', {
+        .delete('http://10.250.238.169:8096/api/v1/' + type + '/delete', {
             headers: {'Content-Type': 'application/json'},
             data: id
         })
@@ -533,7 +533,7 @@ async function delNormal(type, id) {
 
 async function delAll(type) {
     return await axios
-        .get('http://10.250.238.177:8096/api/v1/' + type + '/deleteAll')
+        .get('http://10.250.238.169:8096/api/v1/' + type + '/deleteAll')
         .catch((error) => {
             console.error(error)
         })

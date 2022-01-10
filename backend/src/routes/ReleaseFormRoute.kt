@@ -2,6 +2,7 @@ package com.sample.routes
 
 import com.sample.services.ReleaseFormService
 import io.ktor.application.*
+import io.ktor.http.*
 import io.ktor.response.*
 import io.ktor.routing.*
 import org.kodein.di.instance
@@ -31,6 +32,10 @@ fun Route.releaseForm() {
             call.respond(relForm)
         }
 
+        post("/init") {
+            releaseFormService.init()
+            call.respond(HttpStatusCode.OK, "Init ReleaseFormTable OK!")
+        }
 
         // UPDATE
 //        post("/update") {

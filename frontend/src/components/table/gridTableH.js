@@ -30,20 +30,20 @@ class GridTableH extends React.Component {
     componentDidUpdate = (prevProps) => {
 
         const ref = (prevProps.refre !== this.props.refre)
-        const cond = (this.props.hflag && (prevProps.hflag !== this.props.hflag)) //TODO::고치고
+        const cond = (this.props.hflag && (prevProps.hflag !== this.props.hflag))
         if(cond){
             this.props.handleData() //history data reload
             this.props.hisFlag(false)
         }
-        if(ref){
+        if(this.props.refre && ref){
             console.log("hi?")
             this.props.handleData()
+            this.props.revRe(false)
         }
         // if(ref){
             //checkbox 해제해놓기
         // }
     }
-    //TODO:: history data 없을때는 no row가 떠야하는뎁..
     columns = [
         { Header: "No",
             // accessor:"id",

@@ -9,7 +9,8 @@ import org.jetbrains.exposed.sql.Column
 
 data class Header(
     val id: Int,
-    val info: HeaderInfo
+    val info: HeaderInfo,
+    val updatedat: String?
 )
 
 object HeaderTable : IntIdTable() {
@@ -21,10 +22,10 @@ class HeaderEntity(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<HeaderEntity>(HeaderTable)
 
     var info by HeaderTable.info
-//    var updatedAt by HeaderTable.updatedAt
+    var updatedAt by HeaderTable.updatedAt
 
     override fun toString(): String = "Header($info)"
-    fun toHistory(): Header = Header(id.value, info)
+    fun toHistory(): Header = Header(id.value, info, updatedAt)
 }
 
 

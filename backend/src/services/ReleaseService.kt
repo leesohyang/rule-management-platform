@@ -1,6 +1,5 @@
 package com.sample.services
 
-import com.sample.data.field.FieldEntity
 import com.sample.data.release.Release
 import com.sample.data.release.ReleaseEntity
 import com.sample.data.release.ReleaseTable
@@ -49,11 +48,11 @@ class ReleaseService {
             this.value = release.value
         }
     }
-
-    fun delete(ids: Iterable<Int>) = transaction {
-        ids.forEach { id ->
-            FieldEntity.find { ReleaseTable.id eq id }.firstOrNull()?.delete()
-//            NodeEntity[id].delete()
-        }
-    }
+//
+//    fun delete(ids: Iterable<Int>) = transaction {
+//        ids.forEach { id ->
+//            FieldEntity.find { ReleaseTable.id eq id }.firstOrNull()?.delete()
+////            NodeEntity[id].delete()
+//        }
+//    }
 }

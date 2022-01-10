@@ -57,13 +57,13 @@ fun Route.releases() {
             call.respond(HttpStatusCode.Accepted)
         }
 
-        // DELETE
-        delete("/delete") {
-            val temp = call.receive<Any>()
-            println("temp: $temp")
-            val ids = call.receive<List<String>>().map {id->id.toInt()}
-            releaseService.delete(ids)
-            call.respond(HttpStatusCode.OK)
-        }
+//        // DELETE
+//        delete("/delete") {
+//            val temp = call.receive<Any>()
+//            println("temp: $temp")
+//            val ids = call.receive<List<String>>().map {id->id.toInt()}
+////            releaseService.delete(ids)
+//            call.respond(HttpStatusCode.OK)
+//        }
     }
 }

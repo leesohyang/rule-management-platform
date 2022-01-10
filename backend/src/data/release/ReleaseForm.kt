@@ -22,7 +22,7 @@ object ReleaseFormTable : IntIdTable() {
 
 class ReleaseFormEntity(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<ReleaseFormEntity>(ReleaseFormTable)
-    val type by ReleaseFormTable.type
+    var type by ReleaseFormTable.type
     var value by ReleaseFormTable.value
     var signal by ReleaseFormTable.signal
 

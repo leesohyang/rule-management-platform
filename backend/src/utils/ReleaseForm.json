@@ -1,0 +1,13 @@
+{
+  "type": "Field",
+  "value": {
+    "nodeSize": "30",
+    "separator": "@",
+    "makeSubNode": "true",
+    "releasePath": "/tmp"
+  },
+  "signal": {
+    "path": "/signal",
+    "signal": "test"
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "ver": "1.0",
+  "type": "live",
+  "header": [ "id", "active", "ruletype", "keyfield", "confirms", "test" ]
+}

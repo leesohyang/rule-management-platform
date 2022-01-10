@@ -2,18 +2,20 @@ package com.sample.services
 
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.KotlinModule
 import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.jetbrains.exposed.sql.transactions.transaction
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import com.sample.data.history.HistoryLDR2
+import com.sample.data.history.HistoryLDRTable
 import com.sample.data.jsonb
 import com.sample.utils.formatter
 import org.jetbrains.exposed.dao.id.IntIdTable
+import org.jetbrains.exposed.sql.deleteWhere
+import org.jetbrains.exposed.sql.min
+import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.sql.wrapAsExpression
 import java.time.LocalDateTime
 
 @Serializable
@@ -153,6 +155,10 @@ class RuleService {
 //        println(query)
         val statement = conn.prepareStatement(query, false)
         statement.executeUpdate()
+
+        val hisCount: Long = HistoryLDRTable.selectAll().count()
+        val subquery = HistoryLDRTable.slice(HistoryLDRTable.updatedat.min()).selectAll().limit(1)
+        if (hisCount > 10) HistoryLDRTable.deleteWhere { HistoryLDRTable.updatedat eq wrapAsExpression(subquery) }
 
     }
 

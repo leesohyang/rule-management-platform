@@ -45,6 +45,12 @@ fun Route.header() {
             call.respond(HttpStatusCode.OK)
         }
 
+        post("/init") {
+            headerService.init()
+            call.respond(HttpStatusCode.OK, "Init HeaderTable OK!")
+        }
+
+
 
     }
 }

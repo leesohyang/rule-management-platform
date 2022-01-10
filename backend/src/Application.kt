@@ -22,9 +22,6 @@ fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 @Suppress("unused") // Referenced in application.conf
 @kotlin.jvm.JvmOverloads
 fun Application.module(testing: Boolean = false) {
-
-    initDB()
-
     install(ContentNegotiation) { gson {}}
     install(CallLogging)
     install(StatusPages) {
@@ -45,13 +42,8 @@ fun Application.module(testing: Boolean = false) {
         allowNonSimpleContentTypes = true
     }
 
-    di {
-        bindServices()
-    }
-
-    routing {
-        apiRoute()
-    }
-
+    initDB()
+    di { bindServices() }
+    routing { apiRoute() }
 }
 

@@ -51,19 +51,23 @@ export default function ReleasePopup(props) {
 
     const handleRelease = () => {
 
-        if (!editId.length && !delId.length) { //헤더 변경되어도 변경내역 없으면 무시됨.
-            apiProvider.releaseZk(state)
-                .then(() => apiProvider.signalZk(signals))
-                .then(() =>
-                    apiProvider.updateRelease().then(() => {
-                        dispatch(revRe(true));
-                        // dispatch(editZero())
-                    }))
-        } else {
-            //비동기 처리 되려나
-            props.handleSave()
-            apiProvider.releaseZk(state).then(() => apiProvider.signalZk(signals))
-        }
+        props.handleSave()
+        apiProvider.releaseZk(state).then(() => apiProvider.signalZk(signals))
+
+        dispatch(openPop(false))
+        // if (!editId.length && !delId.length) { //헤더 변경되어도 변경내역 없으면 무시됨.
+        //     apiProvider.releaseZk(state)
+        //         .then(() => apiProvider.signalZk(signals))
+        //         .then(() =>
+        //             apiProvider.updateRelease().then(() => {
+        //                 dispatch(revRe(true));
+        //                 // dispatch(editZero())
+        //             }))
+        // } else {
+        //     //비동기 처리 되려나
+        //     props.handleSave()
+        //     apiProvider.releaseZk(state).then(() => apiProvider.signalZk(signals))
+        // }
     }
 
     return (
