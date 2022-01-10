@@ -7,9 +7,6 @@ import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.Column
 
-
-
-//얘넨 뭐지
 data class Release(
     val id: Int,
     val value: ReleaseData,
@@ -21,9 +18,6 @@ object ReleaseTable : IntIdTable() {
     val value = jsonb("value", ReleaseData.serializer() )
     val desc: Column<String> = varchar("desc", 255)
     val updatedAt: Column<String> = varchar("updated_at", 255)
-
-
-
 }
 
 class ReleaseEntity(id: EntityID<Int>) : IntEntity(id) {

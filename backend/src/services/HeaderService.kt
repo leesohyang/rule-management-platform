@@ -15,19 +15,16 @@ class HeaderService {
     private val mapper = jacksonObjectMapper()
 
     fun init() = transaction {
-        val now: String = LocalDateTime.now().format(formatter).toString()
-//        val conn = TransactionManager.current().connection
-        val wDir = System.getProperty("user.dir")
-        val rf = mapper.readValue<HeaderInfo>(File("$wDir/backend/src/utils/HeaderForm.json"))
-        HeaderEntity.new {
-            this.info = rf
-            this.updatedAt = now
+        val count: Long = HeaderEntity.count()
+        if (count < 1) {
+            val now: String = LocalDateTime.now().format(formatter).toString()
+            val wDir = System.getProperty("user.dir")
+            val rf = mapper.readValue<HeaderInfo>(File("$wDir/backend/src/utils/HeaderForm.json"))
+            HeaderEntity.new {
+                this.info = rf
+                this.updatedAt = now
+            }
         }
-//        val query = "INSERT INTO releaseform\n" +
-//                "(\"type\", \"value\", \"signal\")\n" +
-//                "VALUES('${rf.type}', '${rf.value}', '${rf.signal}')\n"
-//        val statement = conn.prepareStatement(query, false)
-//        statement.executeUpdate()
     }
 
     fun restoreHeader(version: String) = transaction {

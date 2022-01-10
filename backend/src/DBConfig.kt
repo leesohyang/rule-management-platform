@@ -1,11 +1,7 @@
 package com.sample
 
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
 import com.sample.data.header.HeaderTable
 import com.sample.data.history.HistoryLDRTable
-import com.sample.data.release.ReleaseForm
-import com.sample.data.release.ReleaseFormEntity
 import com.sample.data.release.ReleaseFormTable
 import com.sample.data.release.ReleaseTable
 import com.sample.services.LiveDetectRuleTable
@@ -15,10 +11,8 @@ import io.ktor.application.Application
 import io.ktor.util.KtorExperimentalAPI
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
-import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.LoggerFactory
-import java.io.File
 
 const val HIKARI_CONFIG_KEY = "ktor.hikariconfig"
 

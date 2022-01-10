@@ -2,9 +2,8 @@ package com.sample.services
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import com.sample.data.header.HeaderInfo
+import com.sample.data.header.HeaderEntity
 import com.sample.data.release.ReleaseForm
-import com.sample.data.release.ReleaseFormData
 import com.sample.data.release.ReleaseFormEntity
 import com.sample.data.release.ReleaseFormTable
 import org.jetbrains.exposed.sql.transactions.TransactionManager
@@ -17,12 +16,15 @@ class ReleaseFormService {
     private val mapper = jacksonObjectMapper()
 
     fun init() = transaction {
-        val wDir = System.getProperty("user.dir")
-        val rf = mapper.readValue<ReleaseForm>(File("$wDir/backend/src/utils/ReleaseForm.json"))
-        ReleaseFormEntity.new {
-            this.type = rf.type
-            this.value = rf.value
-            this.signal = rf.signal
+        val count: Long = HeaderEntity.count()
+        if (count < 1) {
+            val wDir = System.getProperty("user.dir")
+            val rf = mapper.readValue<ReleaseForm>(File("$wDir/backend/src/utils/ReleaseForm.json"))
+            ReleaseFormEntity.new {
+                this.type = rf.type
+                this.value = rf.value
+                this.signal = rf.signal
+            }
         }
     }
 

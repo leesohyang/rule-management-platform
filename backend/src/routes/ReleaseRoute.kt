@@ -15,13 +15,6 @@ fun Route.releases() {
     val releaseService by di().instance<ReleaseService>()
 
     route("/release") {
-
-        // SELCT ALL
-//        get("/selectall") {
-//            val allReleases = releaseService.selectAll()
-//            call.respond(allReleases)
-//        }
-
         get("/selectall") {
             val allReleases = releaseService.selectPart()
             call.respond(allReleases)
@@ -34,13 +27,6 @@ fun Route.releases() {
             call.respond(release)
 //            if (asset == null) call.respond(HttpStatusCode.NotFound)
         }
-
-//        get("/selectbyquery") {
-//            val params = call.parameters
-//            val response = assetService.selectByQuery(params)
-//            call.respond(response)
-//
-//        }
 
         // UPDATE
         post("/update") {

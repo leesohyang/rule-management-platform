@@ -1,10 +1,7 @@
 package com.sample.routes.history
 
-import com.sample.data.history.HistoryLDR
 import com.sample.services.history.HistoryLDRService
 import io.ktor.application.*
-import io.ktor.http.*
-import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
 import org.kodein.di.instance
