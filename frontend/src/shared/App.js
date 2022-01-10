@@ -9,19 +9,16 @@ import MainContents from "../components/main/MainContents";
 import '../components/styles/styles.scss'
 import {apiProvider} from "../services/Provider";
 
-//TODO::Navigator 따로 빼야함.
+
+async function inits(){
+    await apiProvider.initHead().then(()=>console.log("initHead"))
+    await apiProvider.initRelForm().then(()=>console.log("initRelForm"))
+}
 
 function App() {
-    React.useEffect(()=>{
-        async function inits(){
-            apiProvider.initHead().then(()=>console.log("initHead"))
-            apiProvider.initRelForm().then(()=>console.log("initRelForm"))
-        }
-        inits().then(()=>console.log("done!"));
-    }, [])
+    inits().then(()=>console.log("done!"));
 
     return (
-        // <div className={classes.root}>
         <React.Fragment>
 
             <BrowserRouter initialEntries={['/']} initialIndex={0}>
