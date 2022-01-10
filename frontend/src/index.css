@@ -1,0 +1,22 @@
+* {
+  font-family: 'Noto Sans KR', 'Sans-serif', Helvetica, Arial, Verdana, Tahoma,
+  sans-serif;
+  -webkit-font-smoothing: antialiased;
+  box-sizing: border-box;
+}
+
+/*html {*/
+/*  width: 1920px;*/
+/*  max-width: 1920px;*/
+/*}*/
+
+body {
+  background-color: #282a35;
+  color: #ffffff;
+
+  /*width: 1920px;*/
+  /*max-width: 1920px;*/
+
+  padding: 0;
+  margin: 0;
+}
