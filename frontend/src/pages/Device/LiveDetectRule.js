@@ -39,6 +39,7 @@ const LiveDetectRule = () => {
         apiProvider.getHead().then((ver) => {
             dispatch(saveVersion(ver))
             dispatch(apiProvider.getHeadVer(ver))
+
         })
         // handleData()
     }, [])

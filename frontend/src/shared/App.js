@@ -7,10 +7,16 @@ import Navigator from "../components/main/Navigator";
 import {makeStyles} from "@material-ui/core";
 import MainContents from "../components/main/MainContents";
 import '../components/styles/styles.scss'
+import {apiProvider} from "../services/Provider";
 
 //TODO::Navigator 따로 빼야함.
 
 function App() {
+    React.useEffect(()=>{
+        apiProvider.initHead().then(()=>console.log("initHead"))
+        apiProvider.initRelForm().then(()=>console.log("initRelForm"))
+    }, [])
+
     return (
         // <div className={classes.root}>
         <React.Fragment>

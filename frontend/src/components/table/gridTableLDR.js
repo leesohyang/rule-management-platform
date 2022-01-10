@@ -196,7 +196,6 @@ class GridTableLDR extends React.Component {
 
         const result = Object.keys(rest).reduce((prev, current) =>
             ({...prev, [current.toLowerCase()]: rest[current]}), {})
-        //input안에 name있음 이거 가지고 action넣으면 되지 않을까
         const Component = editing ? 'input' : 'p';
         const children =
             (!editing && <HighlightCell value={value} {...rest} />) || undefined;

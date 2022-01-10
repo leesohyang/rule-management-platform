@@ -177,6 +177,7 @@ async function getHead() {
 
 }
 
+
 async function getLiveRulesFilter(obj) {
         return await axios
             .post('http://10.250.238.169:8096/api/v1/rules/selectAllFilters', obj)
@@ -223,8 +224,7 @@ async function upsertAndHistory(release, rules){
         .post('http://10.250.238.169:8096/api/v1/rules/upsertAndHistory2?released=' + release, rules)
         .catch((error)=>{
             console.error(error)
-        })
-}
+        }) }
 async function restore(rules, release){
     return await axios
         .post('http://10.250.238.169:8096/api/v1/rules/restore?released='+ release , rules)
@@ -497,6 +497,23 @@ async function getNextId() {
         })
 }
 
+async function initHead() {
+    return await axios
+        .post("http://10.250.238.169:8096/api/v1/header/init")
+        .then((res)=> res.data)
+        .catch((error) => {
+            console.error(error)
+        })
+}
+
+async function initRelForm() {
+    return await axios
+        .post("http://10.250.238.169:8096/api/v1/releaseForm/init")
+        .then((res)=> res.data)
+        .catch((error) => {
+            console.error(error)
+        })
+}
 async function update(type, ob) {
     console.log(ob)
     const sob = (({createdAt, updatedAt, ...other}) => other)(ob)
@@ -581,6 +598,8 @@ export const apiProvider = {
     getFiltersCounts,
     deActiveHead,
     upsertAndHistory,
-    getNextId
+    getNextId,
+    initHead,
+    initRelForm
 
 };
