@@ -1,7 +1,7 @@
-package com.sample.routes
+package com.sample.routes.header
 
 import com.sample.data.header.HeaderInfo
-import com.sample.services.HeaderService
+import com.sample.services.header.HeaderService
 import io.ktor.application.*
 import io.ktor.http.*
 import io.ktor.request.*

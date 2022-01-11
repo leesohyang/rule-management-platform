@@ -7,7 +7,6 @@ import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 
-// import { props.options } from "./utils";
 import {makeStyles} from "@material-ui/core/styles";
 import {useDispatch, useSelector} from "react-redux";
 import {selectedOp} from "../../services/Redux/actions";
@@ -53,13 +52,9 @@ const MenuProps = {
     variant: "menu"
 };
 
-//selected 초기화해야함
 export default function MultiSelect(props) {
-    // const { name, label, value,error=null, onChange, props.options } = props;
 
-    console.log(props.options)
     const classes = useStyles();
-    // const [selected, setSelected] = useState([]);
     const dispatch = useDispatch();
 
     const selected = useSelector(state=>state.SlidePop.selectedData)

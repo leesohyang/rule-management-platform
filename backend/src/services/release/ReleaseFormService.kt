@@ -1,19 +1,29 @@
-package com.sample.services
+package com.sample.services.release
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.sample.data.release.ReleaseForm
 import com.sample.data.release.ReleaseFormEntity
 import com.sample.data.release.ReleaseFormTable
-import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.io.File
 
-
+/**
+ * Service class for ReleaseForm transaction
+ * @version 1.0.0
+ */
 class ReleaseFormService {
 
+    /**
+     * String to Object mapper
+     */
     private val mapper = jacksonObjectMapper()
 
+    /**
+     * Transaction for initializing release form database
+     * Read ReleaseForm.json and then insert release form into database
+     * Used Kotlin Exposed DAO
+     */
     fun init() = transaction {
         val count: Long = ReleaseFormEntity.count()
         println("Count: $count")
@@ -28,24 +38,20 @@ class ReleaseFormService {
         }
     }
 
+    /**
+     * Transaction to select release form from database by type
+     * Used Kotlin Exposed DAO
+     * @param type  rule type string for release form. ex> Field, LiveDetectRule, NormalizeRule
+     */
     fun selectByType(type: String) = transaction {
         ReleaseFormEntity.find { ReleaseFormTable.type eq type}.firstOrNull()?.toReleaseForm() ?: throw Exception("Not in Field.")
     }
 
-
+    /**
+     * Transaciton to select all of release form from database
+     * Used Kotlin Exposed DAO
+     */
     fun selectAll(): Iterable<ReleaseForm> = transaction {
         ReleaseFormEntity.all().map(ReleaseFormEntity::toReleaseForm)
     }
-
-    fun select(type: String) = transaction {
-        TransactionManager.current().exec("select * from releaseform r where value ->> 'makeSubNode' = 'true'") { rs ->
-            while(rs.next()) {
-                println(rs.getString("type"))
-            }
-//            }
-            rs
-            rs.close()
-        }
-    }
-
 }

@@ -1,8 +1,8 @@
 package com.sample.data.history
 
 import org.jetbrains.exposed.dao.id.IntIdTable
-import com.sample.data.jsonb
-import com.sample.services.LiveDetectRules
+import com.sample.data.rules.LiveDetectRule
+import com.sample.utils.jsonb
 import kotlinx.serialization.Serializable
 
 
@@ -12,7 +12,7 @@ data class HistoryLDR(
     val desc: String,
     val user: String,
     val released: String, //TODO:: string -> boolean
-    val value: List<LiveDetectRules>,
+    val value: List<LiveDetectRule>,
     val updatedat: String?,
 )
 
@@ -27,6 +27,6 @@ object HistoryLDRTable : IntIdTable() {
     val desc = varchar("desc", 255)
     val user = varchar("user", 255)
     val released = varchar("released", 255)
-    val value = jsonb("value", LiveDetectRules.serializer())
+    val value = jsonb("value", LiveDetectRule.serializer())
     val updatedat = varchar("updatedat", 255)
 }

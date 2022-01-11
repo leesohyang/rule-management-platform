@@ -1,6 +1,6 @@
-package com.sample.routes
+package com.sample.routes.release
 
-import com.sample.services.ReleaseFormService
+import com.sample.services.release.ReleaseFormService
 import io.ktor.application.*
 import io.ktor.http.*
 import io.ktor.response.*

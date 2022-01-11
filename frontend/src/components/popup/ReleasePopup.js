@@ -1,23 +1,12 @@
 import React from 'react'
-// import { Dialog, DialogTitle, DialogContent, makeStyles, Typography } from '@material-ui/core';
-// import { makeStyles } from "@material-ui/core";
-// import Controls from "./controls/Controls";
-// import CloseIcon from '@material-ui/icons/Close';
-import {convertHex2Str} from "../util/utils";
-import {useDispatch, useSelector} from "react-redux";
-import {delSave, editZero, hisFlag, openPop, revRe} from "../../services/Redux/actions";
-import {apiProvider} from "../../services/Provider";
-import isEqual from 'lodash.isequal';
+import { convertHex2Str} from "../util/utils";
+import { useDispatch} from "react-redux";
+import { openPop} from "../../services/Redux/actions";
+import { apiProvider} from "../../services/Provider";
 
 export default function ReleasePopup(props) {
 
     const dispatch = useDispatch();
-
-    const data = useSelector(state => state.fetchAPI.data)
-    const currData = useSelector(state => state.fetchAPI.editedOrigin)
-    const savedData = useSelector(state => state.editOperator.savedData)
-    const editId = useSelector(state => state.editOperator.editId)
-    const delId = useSelector(state => state.editOperator.delId)
 
     const [state, setState] = React.useState({
         releasePath: "",
@@ -34,7 +23,6 @@ export default function ReleasePopup(props) {
                 setState(res.data.value);
                 setSigDef(res.data.signal);
             }
-            // console.log(res)
         )
     }, [])
 
@@ -55,19 +43,6 @@ export default function ReleasePopup(props) {
         apiProvider.releaseZk(state).then(() => apiProvider.signalZk(signals))
 
         dispatch(openPop(false))
-        // if (!editId.length && !delId.length) { //헤더 변경되어도 변경내역 없으면 무시됨.
-        //     apiProvider.releaseZk(state)
-        //         .then(() => apiProvider.signalZk(signals))
-        //         .then(() =>
-        //             apiProvider.updateRelease().then(() => {
-        //                 dispatch(revRe(true));
-        //                 // dispatch(editZero())
-        //             }))
-        // } else {
-        //     //비동기 처리 되려나
-        //     props.handleSave()
-        //     apiProvider.releaseZk(state).then(() => apiProvider.signalZk(signals))
-        // }
     }
 
     return (
@@ -78,7 +53,6 @@ export default function ReleasePopup(props) {
         >
             <div className="popup__header">
                 <h5>
-                    {/*<IntlMessages id="field.release.option" />*/}
                     release option
                 </h5>
                 <button
@@ -86,17 +60,13 @@ export default function ReleasePopup(props) {
                     onClick={() => onClose()}
                 />
             </div>
-            <div
-                className="popup__body release-option-popup"
-            >
+            <div className="popup__body release-option-popup" >
                 <div className="release-option-wrap">
-                    <div className="release-option-tab"></div>
+                    <div className="release-option-tab"/>
                     <div>
                         <label>Release Path : </label>
                         <input
                             type="text"
-                            // value={state[tab].releasePath}
-                            // defaultValue={"default"}
                             value={state.releasePath}
                             className="form-control"
                             style={{width: "455px"}}
@@ -110,7 +80,6 @@ export default function ReleasePopup(props) {
                         <label>Node Size : </label>
                         <input
                             type="text"
-                            // value={state[tab].releasePath}
                             value={state.nodeSize}
                             className="form-control"
                             style={{width: "155px"}}
@@ -124,7 +93,6 @@ export default function ReleasePopup(props) {
                         <label>Make Sub Node : </label>
                         <input
                             type="text"
-                            // value={state[tab].releasePath}
                             value={state.makeSubNode}
                             className="form-control"
                             style={{width: "155px"}}
@@ -161,7 +129,6 @@ export default function ReleasePopup(props) {
                             if (signals.length > 0 && (!signals.slice(-1)[0].signal && !signals.slice(-1)[0].path)) {
                                 return;
                             }
-                            // setSignals([...signals, {signal: '', path: ''}]);
                             setSignals([...signals, sigDef]);
                         }}
                     >ADD
@@ -248,16 +215,12 @@ export default function ReleasePopup(props) {
                     className="btn"
                     onClick={() => onClose()}
                 >
-                    {/*<IntlMessages id="cancel" />*/}
                     cancel
                 </button>
                 <button className="btn btn--blue" onClick={() => handleRelease()}>
-                    {/*<IntlMessages id="save" />*/}
                     save
                 </button>
             </div>
-
-
         </div>
     )
 }

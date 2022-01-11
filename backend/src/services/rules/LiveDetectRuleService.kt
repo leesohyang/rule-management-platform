@@ -1,72 +1,40 @@
-package com.sample.services
+package com.sample.services.rules
 
-import com.fasterxml.jackson.annotation.JsonCreator
-import com.fasterxml.jackson.annotation.JsonProperty
-import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.jetbrains.exposed.sql.transactions.transaction
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.sample.data.history.HistoryLDR2
 import com.sample.data.history.HistoryLDRTable
-import com.sample.data.jsonb
+import com.sample.data.rules.Conditions
+import com.sample.data.rules.LiveDetectRule
 import com.sample.utils.formatter
-import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.min
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.wrapAsExpression
 import java.time.LocalDateTime
 
-@Serializable
-data class LiveDetectRules(
-    val id: Int,
-    val active: String,
-    val ruletype: String,
-    val keyfield: String,
-    val confirms: String,
-    val conditions: List<Conditions>,
-    val ver: String,
-    val updatedat: String?
-){
-    fun sepString(sep: String): String {
-        return "$id$sep$active$sep$ruletype$sep$keyfield$sep$confirms$sep$conditions$sep$ver\n"
-    }
-}
+/**
+ * Service class for LiveDetectRule transaction
+ * @version 1.0.0
+ */
+class LiveDetectRuleService {
 
-object LiveDetectRuleTable : IntIdTable() {
-    val active = varchar("active", 255)
-    val ruletype = varchar("ruletype", 255)
-    val keyfield = varchar("keyfield", 255)
-    val corfirms = varchar("confirms", 255)
-    val conditions = jsonb("conditions", Conditions.serializer())
-    val ver = varchar("ver", 255)
-    val updatedat = varchar("updatedat", 255)
-}
-
-@Serializable
-data class Conditions @JsonCreator constructor(
-    @JsonProperty("field") val field: String,
-    @JsonProperty("value") val value: String,
-) {
-    override fun toString(): String {
-        return "{" +
-                "\"field\": \"$field\"," +
-                "\"value\": \"$value\"" +
-                "}"
-    }
-}
-
-class RuleService {
-
+    /**
+     * String to Object mapper
+     */
     private val mapper = jacksonObjectMapper()
 
+    /**
+     * Transaciton to select rows and join to string from database
+     * Used Kotlin Exposed SQL Transaction Manager
+     * @param sep   Separator string
+     */
     fun selectString(sep: String) = transaction {
-
-        val result = arrayListOf<LiveDetectRules>()
+        val result = arrayListOf<LiveDetectRule>()
         TransactionManager.current().exec("select * from livedetectrule") { rs ->
             while (rs.next()) {
-
                 val id = rs.getInt("id")
                 val active = rs.getString("active")
                 val ruleType = rs.getString("ruletype")
@@ -74,16 +42,17 @@ class RuleService {
                 val confirms = rs.getString("confirms")
                 val cons = rs.getArray("conditions")
                 val ver = rs.getString("ver")
-
                 val updatedat = rs.getString("updatedat")
-
                 val last = mapper.readValue<List<Conditions>>(cons.toString())
-                result.add(LiveDetectRules(id, active, ruleType, keyField, confirms, last, ver, updatedat))
+                result.add(LiveDetectRule(id, active, ruleType, keyField, confirms, last, ver, updatedat))
             }
         }
         result.joinToString(separator = "") { it.sepString(sep) }
     }
 
+    /**
+     * Transaction to get last id
+     */
     fun selectNextID() = transaction {
         var result: Int = 0
         TransactionManager.current().exec("select id from livedetectrule n order by id desc limit 1;") { rs ->
@@ -94,7 +63,13 @@ class RuleService {
         result
     }
 
-    fun restore(req: Array<LiveDetectRules>, hisldr: HistoryLDR2) = transaction {
+    /**
+     * Transaction to change LiveDetectRule table contents to other
+     * Used Kotlin Exposed SQL Transaction Manager
+     * @param req       array of LiveDetectRule data class
+     * @param hisldr    LiveDetectRule history data class
+     */
+    fun restore(req: Array<LiveDetectRule>, hisldr: HistoryLDR2) = transaction {
         val now: String = LocalDateTime.now().format(formatter).toString()
         val conn = TransactionManager.current().connection
         val mapper = jacksonObjectMapper()
@@ -123,7 +98,15 @@ class RuleService {
         statement.executeUpdate()
     }
 
-    fun upsertbulk2(list: Array<LiveDetectRules>, hisldr: HistoryLDR2) = transaction {
+    /**
+     * Transaction to insert or update LiveDetectRule to database
+     * Required postgresql ver >= 9.3
+     * Used Kotlin Exposed SQL Transaction Manager
+     * Used Kotlin Exposed DSL
+     * @param list      array of LiveDetectRule data class
+     * @param hisldr    LiveDetectRule history data class
+     */
+    fun upsertbulk2(list: Array<LiveDetectRule>, hisldr: HistoryLDR2) = transaction {
         val now: String = LocalDateTime.now().format(formatter).toString()
         val conn = TransactionManager.current().connection
 
@@ -135,7 +118,6 @@ class RuleService {
         val valueStr = values.toString()
         val sub = valueStr.substring(1, valueStr.length - 1)
 
-//        postgresql ver >= 9.3
         val query =
             "WITH\nn(\"id\", \"active\", \"ruletype\", \"keyfield\", \"confirms\", \"conditions\", \"ver\", \"updatedat\") AS (\n" +
                     "VALUES\n $sub \n),\n" +
@@ -146,13 +128,12 @@ class RuleService {
                     "INSERT INTO livedetectrule(\"id\", \"active\", \"ruletype\", \"keyfield\", \"confirms\", \"conditions\", \"ver\", \"updatedat\")\n" +
                     "SELECT n.id, n.active, n.ruletype, n.keyfield, n.confirms, n.conditions, n.ver, n.updatedat FROM n\n" +
                     "WHERE n.id NOT IN ( SELECT id FROM upsert );\n" +
-//                update version
+                    // update version
                     "update livedetectrule set ver=${version};\n" +
-//                insert history
+                    // insert history
                     "INSERT INTO historyldr\n" +
                     "(\"desc\", \"user\", \"released\", \"value\", \"updatedat\")\n" +
                     "VALUES('${hisldr.desc}', '${hisldr.user}', '${hisldr.released}', (SELECT json_agg(livedetectrule) FROM livedetectrule), '$now')\n"
-//        println(query)
         val statement = conn.prepareStatement(query, false)
         statement.executeUpdate()
 
@@ -162,8 +143,13 @@ class RuleService {
 
     }
 
-
-    fun upsertbulk(list: Array<LiveDetectRules>) = transaction {
+    /**
+     * Transaction to insert or update LiveDetectRule to database
+     * Required postgresql ver >= 9.3
+     * Used Kotlin Exposed SQL Transaction Manager
+     * @param list      array of LiveDetectRule data class
+     */
+    fun upsertbulk(list: Array<LiveDetectRule>) = transaction {
         val now: String = LocalDateTime.now().format(formatter).toString()
         val conn = TransactionManager.current().connection
         val values = mutableListOf<String>()
@@ -173,7 +159,6 @@ class RuleService {
         }
         val valueStr = values.toString()
         val sub = valueStr.substring(1, valueStr.length - 1)
-//        postgresql ver >= 9.3
         val query =
             "WITH\nn(\"id\", \"active\", \"ruletype\", \"keyfield\", \"confirms\", \"conditions\", \"ver\", \"updatedat\") AS (\n" +
                     "VALUES\n $sub \n),\n" +
@@ -184,7 +169,7 @@ class RuleService {
                     "INSERT INTO livedetectrule(\"id\", \"active\", \"ruletype\", \"keyfield\", \"confirms\", \"conditions\", \"ver\", \"updatedat\")\n" +
                     "SELECT n.id, n.active, n.ruletype, n.keyfield, n.confirms, n.conditions, n.ver, n.updatedat FROM n\n" +
                     "WHERE n.id NOT IN ( SELECT id FROM upsert );\n" +
-//                insert history
+                    // insert history
                     "INSERT INTO historyldr\n" +
                     "(\"desc\", \"user\", \"released\", \"value\", \"updatedat\")\n" +
                     "VALUES('test', 'admin', 'false', (SELECT json_agg(livedetectrule) FROM livedetectrule), '$now')\n"
@@ -194,6 +179,11 @@ class RuleService {
 
     }
 
+    /**
+     * Transaction to delete LiveDetectRule from database
+     * Used Kotlin Exposed SQL Transaction Manager
+     * @param id    LiveDetectRule id
+     */
     fun delete(id: String) = transaction {
         val conn = TransactionManager.current().connection
         val query = "DELETE FROM livedetectrule WHERE id = '${id}';"
@@ -201,8 +191,12 @@ class RuleService {
         statement.executeUpdate()
     }
 
-    //TODO:: insert(rule:LiveDetectRules) -> ${}
-    fun insert(req: LiveDetectRules) = transaction {
+    /**
+     * Transaction to insert LiveDetectRule to database
+     * Used Kotlin Exposed SQL Transaction Manager
+     * @param req   LiveDetectRule data class
+     */
+    fun insert(req: LiveDetectRule) = transaction {
         val mapper = jacksonObjectMapper()
         val conn = TransactionManager.current().connection
         println(req.conditions)
@@ -217,7 +211,12 @@ class RuleService {
         statement.executeUpdate()
     }
 
-
+    /**
+     * Transaction to get count of specific LiveDetectRule rows from database with filter
+     * Used Kotlin Exposed SQL Transaction Manager
+     * @param filters   filter rule string
+     * @return result   row count
+     */
     fun getCountFilters(filters: String) = transaction {
         var result: Int = 0
         TransactionManager.current().exec("select count(1) from livedetectrule where $filters") { rs ->
@@ -227,6 +226,11 @@ class RuleService {
         result
     }
 
+    /**
+     * Transaction to get row count of LiveDetectRule from database
+     * Used Kotlin Exposed SQL Transaction Manager
+     * @return result   row count
+     */
     fun getCountRows() = transaction {
         var result: Int = 0 //다른방법은 없나
         TransactionManager.current().exec("select count(1) from livedetectrule") { rs ->
@@ -236,53 +240,70 @@ class RuleService {
         result
     }
 
+    /**
+     * Transaction to select LiveDetectRule from database with offset and limit
+     * Used Kotlin Exposed SQL Transaction Manager
+     * @param offset    offset num to string
+     * @param limit     limit num to string
+     * @return result   arrayList of LiveDetectRule
+     */
     fun select(offset: String, limit: String) = transaction {
-        val result = arrayListOf<LiveDetectRules>()
+        val result = arrayListOf<LiveDetectRule>()
         val now: String = LocalDateTime.now().format(formatter).toString()
         TransactionManager.current().exec("select * from livedetectrule limit $limit offset $offset") { rs ->
             while (rs.next()) {
 
-                var id = rs.getInt("id")
-                var active = rs.getString("active")
-                var ruleType = rs.getString("ruleType")
-                var keyField = rs.getString("keyField")
-                var confirms = rs.getString("confirms")
-                var cons = rs.getArray("conditions")
-                var ver = rs.getString("ver")
+                val id = rs.getInt("id")
+                val active = rs.getString("active")
+                val ruleType = rs.getString("ruleType")
+                val keyField = rs.getString("keyField")
+                val confirms = rs.getString("confirms")
+                val cons = rs.getArray("conditions")
+                val ver = rs.getString("ver")
                 val mapper = jacksonObjectMapper()
 
-                var last = mapper.readValue<List<Conditions>>(cons.toString())
-                result += LiveDetectRules(id, active, ruleType, keyField, confirms, last, ver, now)
+                val last = mapper.readValue<List<Conditions>>(cons.toString())
+                result += LiveDetectRule(id, active, ruleType, keyField, confirms, last, ver, now)
             }
         }
         result
     }
 
+    /**
+     * Transaction to select specific LiveDetectRule from database with offset, limit and filters
+     * Used Kotlin Exposed SQL Transaction Manager
+     * @param offset    offset num to string
+     * @param limit     limit num to string
+     * @param filters   filter rule string
+     * @return result   arrayList of LiveDetectRule
+     */
     fun selectFilters(offset: String, limit: String, filters: String) = transaction {
 
-        val result = arrayListOf<LiveDetectRules>()
+        val result = arrayListOf<LiveDetectRule>()
         val now: String = LocalDateTime.now().format(formatter).toString()
         TransactionManager.current()
             .exec("select * from livedetectrule where $filters limit $limit offset $offset") { rs ->
-
                 while (rs.next()) {
-
-                    var id = rs.getInt("id")
-                    var active = rs.getString("active")
-                    var ruleType = rs.getString("ruleType")
-                    var keyField = rs.getString("keyField")
-                    var confirms = rs.getString("confirms")
-                    var cons = rs.getArray("conditions")
-                    var ver = rs.getString("ver")
+                    val id = rs.getInt("id")
+                    val active = rs.getString("active")
+                    val ruleType = rs.getString("ruleType")
+                    val keyField = rs.getString("keyField")
+                    val confirms = rs.getString("confirms")
+                    val cons = rs.getArray("conditions")
+                    val ver = rs.getString("ver")
                     val mapper = jacksonObjectMapper()
 
-                    var last = mapper.readValue<List<Conditions>>(cons.toString())
-                    result += LiveDetectRules(id, active, ruleType, keyField, confirms, last, ver, now)
+                    val last = mapper.readValue<List<Conditions>>(cons.toString())
+                    result += LiveDetectRule(id, active, ruleType, keyField, confirms, last, ver, now)
                 }
             }
         result
     }
 
+    /**
+     * Transaction to delete all of LiveDetectRules from database
+     * Used Kotlin Exposed SQL Transaction Manager
+     */
     fun deleteAll() = transaction {
         val conn = TransactionManager.current().connection
         val query = "delete from livedetectrule"

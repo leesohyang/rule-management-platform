@@ -1,17 +1,31 @@
 package com.sample.data.release
 
-import com.sample.data.jsonb
+import com.sample.utils.jsonb
+import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
-
 
 data class ReleaseForm(
     val id: Int,
     val type: String,
     val value: ReleaseFormData,
     val signal: ReleaseSignalData
+)
+
+@Serializable
+data class ReleaseFormData(
+    val releasePath: String,
+    val nodeSize: String,
+    val makeSubNode: String,
+    val separator: String
+)
+
+@Serializable
+data class ReleaseSignalData(
+    val path:String,
+    val signal: String
 )
 
 object ReleaseFormTable : IntIdTable() {

@@ -1,25 +1,13 @@
 import axios from 'axios';
-import {
-    getAllR,
-    getGraphs,
-    getLinks,
-    getTmp,
-    getVens,
-    getAllH,
-    selectHead,
-    revRe,
-    saveVersion,
-    getAllHL, getAllHN
-} from "./Redux/actions";
-import {useDispatch} from "react-redux";
+import {getAllH, getAllHL, getAllHN, getAllR, selectHead} from "./Redux/actions";
 
 
-const BASE_URL = 'http://10.250.238.169:8096/api/v1'
+const BASE_URL = 'http://10.250.238.169:8096/api/v1/'
 
 function getAllRedux(type) {
     return async (dispatch) => {
         await axios
-            .get('http://10.250.238.169:8096/api/v1/' + type + '/selectall')
+            .get(BASE_URL + type + '/selectall')
             .then(response => {
                 switch (type) {
                     case "normalizerule":
@@ -41,9 +29,8 @@ function getAllRedux(type) {
 function getNormalizeRuleFilter(obj) {
     return async (dispatch) => {
         await axios
-            .post('http://10.250.238.169:8096/api/v1/normalizerule/selectAllFilters', obj)
+            .post(BASE_URL + 'normalizerule/selectAllFilters', obj)
             .then(response => {
-                console.log(response.data)
                 return dispatch(getAllR(response.data.slice().map(
                     ({vendors, ...other}) => {
                         return {vendors: vendors.join(',').toString(), ...other}
@@ -59,7 +46,7 @@ function getNormalizeRuleFilter(obj) {
 function getNormalizeRule(offset, limit) {
     return async (dispatch) => {
         await axios
-            .get('http://10.250.238.169:8096/api/v1/normalizerule/selectall?offset=' + offset + '&limit=' + limit)
+            .get(BASE_URL + 'normalizerule/selectall?offset=' + offset + '&limit=' + limit)
             .then(response => {
                 console.log(response.data)
                 return dispatch(getAllR(response.data.slice().map(
@@ -76,13 +63,13 @@ function getNormalizeRule(offset, limit) {
 
 async function getRowCounts(type) {
     return await axios
-        .get('http://10.250.238.169:8096/api/v1/' + type + '/getrowcount')
+        .get(BASE_URL + type + '/getrowcount')
         .then((res) => res.data)
 }
 
 async function getFiltersCounts(type, obj) {
     return await axios
-        .post('http://10.250.238.169:8096/api/v1/' + type + '/getFiltersCount', obj)
+        .post(BASE_URL + type + '/getFiltersCount', obj)
         .then((res) => res.data)
 }
 
@@ -91,7 +78,7 @@ async function getFiltersCounts(type, obj) {
 function getAll(type) {
     return async (dispatch) => {
         await axios
-            .get('http://10.250.238.169:8096/api/v1/' + type + '/selectall')
+            .get(BASE_URL + type + '/selectall')
             .then(response => {
 
                 switch (type) {
@@ -114,7 +101,7 @@ function getAll(type) {
 
 async function deActiveHead() {
     return await axios
-        .get('http://10.250.238.169:8096/api/v1/header/deActive')
+        .get(BASE_URL + 'header/deActive')
         .catch(error => {
             throw(error);
         })
@@ -123,30 +110,19 @@ async function deActiveHead() {
 async function insertHead(ob) {
 
     return await axios
-        .post('http://10.250.238.169:8096/api/v1/header/insert', ob)
+        .post(BASE_URL + 'header/insert', ob)
 }
 
 async function activeHead(version) {
     return await axios
-        .post('http://10.250.238.169:8096/api/v1/header/active', version)
+        .post(BASE_URL + 'header/active', version)
 }
 
-// function insertHead (ob) {
-//     return async (dispatch) => {
-//         await axios
-//             .post('http://10.250.238.169:8096/api/v1/header/insert', ob)
-//             .then(response => {
-//                 dispatch(getHead)
-//             })
-//     }
-// }
 function getHeadVer(version) {
-    console.log(version)
     return async (dispatch) => {
         await axios
-            .get('http://10.250.238.169:8096/api/v1/header/selectHeaderVersion?ver=' + version)
+            .get(BASE_URL + 'header/selectHeaderVersion?ver=' + version)
             .then(response => {
-                console.log(response.data.ver); //안가네
                 const res = response.data.header.map((it) =>
                     Object.assign({}, {Header: it, accessor: it})
                 );
@@ -158,31 +134,22 @@ function getHeadVer(version) {
     }
 }
 
-//live 되어있는 헤드 가져오기
 async function getHead() {
     return await axios
-        .get('http://10.250.238.169:8096/api/v1/header/selectheader')
+        .get(BASE_URL + 'header/selectheader')
         .then(response => {
-            const res = response.data.header.map((it) =>
-                Object.assign({}, {Header: it, accessor: it})
-            )
-            // dispatch(saveVersion(response.data.ver)) //버전 세팅
-            // dispatch(selectHead(res))
-            console.log(response.data.ver)
             return response.data.ver
         })
         .catch(error => {
             throw(error);
         })
-
 }
-
 
 async function getLiveRulesFilter(obj) {
         return await axios
-            .post('http://10.250.238.169:8096/api/v1/rules/selectAllFilters', obj)
+            .post(BASE_URL + 'rules/selectAllFilters', obj)
             .then(response => {
-                const res = response.data.map(({conditions, ...other}) => {
+                return response.data.map(({conditions, ...other}) => {
                     const tp = {};
                     conditions.forEach(
                         ({field, value}) => {
@@ -191,20 +158,17 @@ async function getLiveRulesFilter(obj) {
                     )
                     return Object.assign({}, other, tp)
                 })
-                return res
             })
             .catch(error => {
                 throw(error);
             })
 }
 
-//conditional field 땜에 떨어져있음.
 async function getLiveRules(offset, limit) {
-
     return await axios
-        .get('http://10.250.238.169:8096/api/v1/rules/selectall?offset=' + offset + '&limit=' + limit)
+        .get(BASE_URL + 'rules/selectall?offset=' + offset + '&limit=' + limit)
         .then(response => {
-            const res = response.data.map(({conditions, ...other}) => {
+            return response.data.map(({conditions, ...other}) => {
                 const tp = {};
                 conditions.forEach(
                     ({field, value}) => {
@@ -213,7 +177,6 @@ async function getLiveRules(offset, limit) {
                 )
                 return Object.assign({}, other, tp)
             })
-            return res
         })
         .catch((error) => {
             console.error(error)
@@ -221,20 +184,21 @@ async function getLiveRules(offset, limit) {
 }
 async function upsertAndHistory(release, rules){
     return await axios
-        .post('http://10.250.238.169:8096/api/v1/rules/upsertAndHistory2?released=' + release, rules)
+        .post(BASE_URL + 'rules/upsertAndHistory2?released=' + release, rules)
         .catch((error)=>{
             console.error(error)
         }) }
+
 async function restore(rules, release){
     return await axios
-        .post('http://10.250.238.169:8096/api/v1/rules/restore?released='+ release , rules)
+        .post(BASE_URL + 'rules/restore?released='+ release , rules)
         .catch((error)=>{
             console.error(error)
         })
 }
 async function updateRelease(){
     return await axios
-        .post('http://10.250.238.169:8096/api/v1/history/livedetectrule/updateRelease')
+        .post(BASE_URL + 'history/livedetectrule/updateRelease')
         .catch((error)=>{
             console.error(error)
         })
@@ -242,25 +206,23 @@ async function updateRelease(){
 
 async function getReleaseForm(type) {
     return await axios
-        .get('http://10.250.238.169:8096/api/v1/' + 'releaseForm' + '/select?type=' + type)
+        .get(BASE_URL + 'releaseForm/select?type=' + type)
         .catch((error) => {
             console.error(error)
         })
 }
 
 async function signalZk(signals) {
-    console.log(signals)
     return await axios
-        .post('http://10.250.238.169:8096/api/v1/' + 'rules' + '/signal', signals)
+        .post(BASE_URL + 'rules/signal', signals)
         .catch((error) => {
             console.error(error)
         })
 }
 
 async function parse(parseStr) {
-    console.log({parseStr})
     return await axios
-        .post('http://10.250.238.169:8096/api/v1/normalizerule/parse', {parseStr})
+        .post(BASE_URL + 'normalizerule/parse', {parseStr})
         .then(response => {
             console.log(response)
             return JSON.parse(decodeURIComponent(response.data.replace(/\+/g, "%20")))
@@ -272,9 +234,8 @@ async function parse(parseStr) {
 }
 
 async function releaseZk(options) {
-    console.log(options)
     return await axios
-        .post('http://10.250.238.169:8096/api/v1/' + 'rules' + '/zookeeper', options)
+        .post(BASE_URL + 'rules/zookeeper', options)
         .then(response => {
             console.log(response.data)
         })
@@ -283,93 +244,9 @@ async function releaseZk(options) {
         })
 }
 
-
-function getNodes() { //select all => table 조회 용
-    return async (dispatch) => {
-        await axios.all([
-            axios.get("http://10.250.238.169:8096/api/v1/node/selectall"),
-            axios.get("http://10.250.238.169:8096/api/v1/link/selectall")
-        ])
-            .then(axios.spread(function (node, link) {
-                const m = {}
-                node.data.forEach((i) => {
-                    m[i.id] = i.name
-                })
-                console.log(link.data)
-                dispatch(getLinks(
-                    link.data.map((i) => ({idx: i.id, ...i}))
-                ))
-            }))
-            .catch((error) => {
-                console.error(error)
-            })
-    }
-}
-
-function getAds(nodeId) { // select 인접 노드
-    return async (dispatch) => {
-        await axios.get("http://10.250.238.169:8096/api/v1/node/selectadjacent/" + nodeId)
-            .then(response => {
-                dispatch(getGraphs(
-                    response.data.nodes,
-                    response.data.links
-                ))
-            })
-            .catch((error) => {
-                console.error(error)
-            })
-
-    }
-}
-
-async function getAds2(nodeId) {
-    return await axios
-        .get("http://10.250.238.169:8096/api/v1/node/selectadjacent/" + nodeId)
-        .then(response => {
-            return response.data
-        })
-        .catch((error) => {
-            console.error(error)
-        })
-}
-
-async function getRow(type, id) {
-    return await axios
-        .get('http://10.250.238.169:8096/api/v1/' + type + '/select?id=' + id)
-        .then(response => {
-            console.log([...response.data].shift())
-            return [...response.data].shift();
-        })
-        .catch((error) => {
-            console.error(error)
-        })
-}
-
-function getTemp(type) {
-    return (dispatch) => {
-        axios
-            .get('http://10.250.238.169:8096/api/v1/template/selectbytype?node=' + type)
-            .then(response => {
-                dispatch(getTmp(response.data))
-            })
-            .catch(error => {
-                throw(error);
-            })
-
-    }
-}
-
-async function getTypes(type) {
-    return await axios
-        .get("http://10.250.238.169:8096/api/v1/template/entitytypes?node=" + type)
-        .catch((error) => {
-            console.error(error)
-        })
-}
-
 async function getVendors(enType) {
     return await axios
-        .get("http://10.250.238.169:8096/api/v1/template/vendors?entity=" + enType)
+        .get(BASE_URL + 'template/vendors?entity=' + enType)
         .catch((error) => {
             console.error(error)
         })
@@ -377,7 +254,7 @@ async function getVendors(enType) {
 
 async function getModels(enType, venType) {
     return await axios
-        .get("http://10.250.238.169:8096/api/v1/template/models?entity=" + enType + "&vendor=" + venType)
+        .get(BASE_URL + 'template/models?entity=' + enType + '&vendor=' + venType)
         .catch((error) => {
             console.error(error)
         })
@@ -386,7 +263,7 @@ async function getModels(enType, venType) {
 // 추가 가능한 entity list 조회
 async function getEna(enType) {
     return await axios
-        .get("http://10.250.238.169:8096/api/v1/asset/selectbyquery?entityType=" + enType)
+        .get(BASE_URL + 'asset/selectbyquery?entityType=' + enType)
         .catch((error) => {
             console.error(error)
         })
@@ -394,23 +271,10 @@ async function getEna(enType) {
 
 async function getEnd(enType, venType, moType) {
     return await axios
-        .get("http://10.250.238.169:8096/api/v1/device/selectbyquery?entityType=" + enType + "&vendor=" + venType + "&model=" + moType)
+        .get(BASE_URL + 'device/selectbyquery?entityType=' + enType + '&vendor=' + venType + '&model=' + moType)
         .catch((error) => {
             console.error(error)
         })
-}
-
-async function insertLink(ob) {
-
-    return await axios
-        .post('http://10.250.238.169:8096/api/v1/link/insert', ob)
-        .then(response => {
-            console.log(response)
-        })
-        .catch((error) => {
-            console.error(error)
-        })
-
 }
 
 async function insertLiveDetect(ob, version) {
@@ -425,7 +289,7 @@ async function insertLiveDetect(ob, version) {
     })(ob)
     res['conditions'] = con
     return await axios
-        .post('http://10.250.238.169:8096/api/v1/rules/insert', res)
+        .post(BASE_URL + 'rules/insert', res)
         .then(() => console.log("hi"))
         .catch((error) => {
             console.error(error)
@@ -433,56 +297,19 @@ async function insertLiveDetect(ob, version) {
 }
 
 async function insert(type, ob) {
-    // const sob = (({id, createdAt, updatedAt, ... other}) => other)(ob)
     const sob = (({id, updatedAt, ...other}) => other)(ob) //여기서 id를 빼는데.
-    // console.log(typeof sob.value)
-    console.log(sob)
     return await axios
-        .post('http://10.250.238.169:8096/api/v1/' + type + '/insert', sob)
+        .post(BASE_URL + type + '/insert', sob)
         .catch((error) => {
             console.error(error)
         })
 
-};
-
-
-async function insertNormal(ob) {
-    // ob["rules"] = []
-    const sob = (({vendors, ...other}) => {
-        return Object.assign({}, {vendors: vendors.split(',')}, other) //TODO::restore 할때 vendor 콤마가 사라짐
-    })(ob)
-    console.log(sob)
-    return await axios
-        .post('http://10.250.238.169:8096/api/v1/normalizerule/upsertall', sob)
-        .catch((error) => {
-            console.error(error)
-        })
-}
-
-async function insertNormalTotal(ob) {
-    const sob = (({vendors, ...other}) => {
-        return Object.assign({}, {vendors: vendors.split(',')}, other)
-    })(ob)
-    console.log(sob)
-    return await axios
-        .post('http://10.250.238.169:8096/api/v1/normalizerule/upsert', sob)
-        .catch((error) => {
-            console.error(error)
-        })
 }
 
 async function setHistory() {
     return await axios
-        .get("http://10.250.238.169:8096/api/v1/normalizerule/selectall/tohistory")
+        .get(BASE_URL + 'normalizerule/selectall/tohistory')
         .then((response) => console.log(response.data))
-        .catch((error) => {
-            console.error(error)
-        })
-}
-
-async function getNextVal() {
-    return await axios
-        .get("http://10.250.238.169:8096/api/v1/normalizerule/nextid")
         .catch((error) => {
             console.error(error)
         })
@@ -490,7 +317,7 @@ async function getNextVal() {
 
 async function getNextId() {
     return await axios
-        .get("http://10.250.238.169:8096/api/v1/rules/next_id")
+        .get(BASE_URL + 'rules/next_id')
         .then((res)=> res.data)
         .catch((error) => {
             console.error(error)
@@ -499,7 +326,7 @@ async function getNextId() {
 
 async function initHead() {
     return await axios
-        .post("http://10.250.238.169:8096/api/v1/header/init")
+        .post(BASE_URL + 'header/init')
         .then((res)=> res.data)
         .catch((error) => {
             console.error(error)
@@ -508,27 +335,25 @@ async function initHead() {
 
 async function initRelForm() {
     return await axios
-        .post("http://10.250.238.169:8096/api/v1/releaseForm/init")
+        .post(BASE_URL + 'releaseForm/init')
         .then((res)=> res.data)
         .catch((error) => {
             console.error(error)
         })
 }
 async function update(type, ob) {
-    console.log(ob)
     const sob = (({createdAt, updatedAt, ...other}) => other)(ob)
 
     return await axios
-        .post('http://10.250.238.169:8096/api/v1/' + type + '/update', sob)
+        .post(BASE_URL + type + '/update', sob)
         .catch((error) => {
             console.error(error)
         })
 }
 
 async function del(type, ids) {
-    console.log(ids)
     return await axios
-        .delete('http://10.250.238.169:8096/api/v1/' + type + '/delete', {
+        .delete(BASE_URL + type + '/delete', {
             headers: {'Content-Type': 'application/json'},
             data: ids
         })
@@ -538,11 +363,9 @@ async function del(type, ids) {
 }
 
 async function delNormal(type, id) {
+    console.log(id)
     return await axios
-        .delete('http://10.250.238.169:8096/api/v1/' + type + '/delete', {
-            headers: {'Content-Type': 'application/json'},
-            data: id
-        })
+        .delete(BASE_URL + type + '/delete/' + id)
         .catch((error) => {
             console.error(error)
         })
@@ -571,26 +394,16 @@ export const apiProvider = {
     parse,
     signalZk,
     getAll,
-    getRow,
-    getTemp,
-    getTypes,
     getVendors,
     getModels,
-    getNodes,
     getEna,
     getEnd,
-    getNextVal,
     setHistory,
-    insertLink,
-    getAds,
-    getAds2,
     getLiveRules,
     getLiveRulesFilter,
     insertLiveDetect,
     restore,
     updateRelease,
-    insertNormal,
-    insertNormalTotal,
     insertHead,
     activeHead,
     getHeadVer,
@@ -601,5 +414,4 @@ export const apiProvider = {
     getNextId,
     initHead,
     initRelForm
-
 };

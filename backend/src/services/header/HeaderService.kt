@@ -1,4 +1,4 @@
-package com.sample.services
+package com.sample.services.header
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
@@ -10,10 +10,22 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import java.io.File
 import java.time.LocalDateTime
 
+/**
+ * Service class for Table Header transaction
+ * @version 1.0.0
+ */
 class HeaderService {
 
+    /**
+     * String to Object mapper
+     */
     private val mapper = jacksonObjectMapper()
 
+    /**
+     * Transaction for initializing database.
+     * Read HeaderForm.json and then insert header into database
+     * Used Kotlin Exposed DAO
+     */
     fun init() = transaction {
         val count: Long = HeaderEntity.count()
         if (count < 1) {
@@ -27,19 +39,29 @@ class HeaderService {
         }
     }
 
+    /**
+     * Transaction to change the header to the previously used header
+     * Used Kotlin Exposed SQL Transaction Manager
+     * @param version   Header version what you want.
+     * @return result   HeaderInfo data class
+     */
     fun restoreHeader(version: String) = transaction {
-        var result: HeaderInfo = HeaderInfo()
+        var result = HeaderInfo()
         TransactionManager.current().exec("select * from \"header\" h where info ->> \'ver\' = \'$version\'"){
             rs ->
             while(rs.next()){
-                var content = rs.getString("info")
+                val content = rs.getString("info")
                 val mapper = jacksonObjectMapper()
-                result = mapper.readValue<HeaderInfo>(content)
+                result = mapper.readValue(content)
             }
         }
         result
     }
 
+    /**
+     * Transaction to deactivate previous header
+     * Used Kotlin Exposed SQL Transaction Manager
+     */
     fun deActive () = transaction {
         var result: HeaderInfo = HeaderInfo()
         TransactionManager.current().exec(
@@ -47,27 +69,41 @@ class HeaderService {
                     "set info = jsonb_set(info, \'{type}\', \'\"dead\"\', false) where info ->> \'type\'=\'live\'" )
     }
 
+    /**
+     * Transaction to activate new header
+     * Used Kotlin Exposed SQL Transaction Manager
+     * @param version   New header version
+     */
     fun active (version: String) = transaction {
-        var result: HeaderInfo = HeaderInfo()
         val now: String = LocalDateTime.now().format(formatter).toString()
         TransactionManager.current().exec(
             "update \"header\" " +
                     "set info = jsonb_set(info, \'{type}\', \'\"live\"\', false), updatedat=\'$now\' where info ->> \'ver\'=\'$version\'" )
     }
 
+    /**
+     * Transaction to select activated header from database
+     * Used Kotlin Exposed SQL Transaction Manager
+     * @return result   HeaderInfo data class
+     */
     fun selectLiveHeader() = transaction {
-        var result: HeaderInfo = HeaderInfo()
-//        TransactionManager.current().exec("select * from \"header\" h  order by h.updatedat desc limit 1"){
+        var result = HeaderInfo()
         TransactionManager.current().exec("select * from \"header\" h  where h.info ->> 'type'='live'"){
             rs ->
             while(rs.next()){
-                var content = rs.getString("info")
+                val content = rs.getString("info")
                 val mapper = jacksonObjectMapper()
-                result = mapper.readValue<HeaderInfo>(content)
+                result = mapper.readValue(content)
             }
         }
         result
     }
+
+    /**
+     * Transaction to insert Header to database
+     * Used Kotlin Exposed SQL Transaction Manager
+     * @param req   HeaderInfo data class
+     */
     fun insert (req: HeaderInfo) = transaction {
         val mapper = jacksonObjectMapper()
         val conn = TransactionManager.current().connection
@@ -78,6 +114,4 @@ class HeaderService {
         val statement = conn.prepareStatement(query, false)
         statement.executeUpdate()
     }
-
-
 }

@@ -1,18 +1,11 @@
 import React from "react";
-import set from "lodash/fp/set"; //얘는 지우고
 import {Field} from "redux-form";
-// import Table from "react-table";
 import Table from "react-table"
-import * as BS from "react-bootstrap";
-import initialData from "./dataFactory";
 import FormProvider from "./FormProvider";
-import {avatarColumnProps} from "./AvatarCell";
 import ActionsCell from "./ActionsCell";
 import HighlightCell from "./HighlightCell";
 import GridFilters from "./GridFilters";
-import {useSelector} from "react-redux";
 import {connect} from "react-redux"
-import fetchAPI from "../../services/Redux/reducers/fetchAPI";
 import {
     addedField, addSave,
     currEd, dataSave,
@@ -20,18 +13,15 @@ import {
     getAllR,
     hisFlag,
     keyFieldSelect,
-    openSelectKeyFieldPop, restoreHead, restoreVersion, saveVersion, selectHead, startHis
+    restoreHead, restoreVersion, saveVersion, selectHead, startHis
 } from "../../services/Redux/actions";
 import {bindActionCreators} from 'redux';
 import {addTmp, revRe, openPop} from "../../services/Redux/actions";
-import Pagination from "./Pagination";
 import {apiProvider} from "../../services/Provider";
 import "./style.scss"
 import SelectKeyFieldPopup from "../popup/SelectKeyFieldPopup";
 import SelectConfirmsPopup from "../popup/SelectConfirmsPopup";
 import ReleasePopup from "../popup/ReleasePopup";
-import axios from "axios";
-
 
 class GridTableLDR extends React.Component {
     state = {
@@ -151,7 +141,6 @@ class GridTableLDR extends React.Component {
             this.resetColumn()
         }
         if (resHead && this.props.headRestore) {
-            console.log(this.props.data[0].ver)
             this.props.restoreVer(this.props.data[0].ver)
             this.props.handleHeadVer(this.props.data[0].ver)
             this.props.resHead(false)
@@ -178,6 +167,8 @@ class GridTableLDR extends React.Component {
 
         const result = Object.keys(rest).reduce((prev, current) =>
             ({...prev, [current.toLowerCase()]: rest[current]}), {})
+        // result.show = "true";
+        result.show = value ? "false" : "true"
         const Component = editing ? 'select' : 'p';
         const children = //여기 value 에 직접 넣을 수 있으면 좋을텐데.
             (!editing && <HighlightCell value={value} {...rest} />) || <React.Fragment>
@@ -196,6 +187,8 @@ class GridTableLDR extends React.Component {
 
         const result = Object.keys(rest).reduce((prev, current) =>
             ({...prev, [current.toLowerCase()]: rest[current]}), {})
+        // result.show = "true";
+        result.show = value ? "false" : "true"
         const Component = editing ? 'input' : 'p';
         const children =
             (!editing && <HighlightCell value={value} {...rest} />) || undefined;
@@ -245,12 +238,10 @@ class GridTableLDR extends React.Component {
             selected: newSelected,
             selectAll: 2
         });
-        console.log(this.state.selected)
     }
 
     toggleSelectAll() {
         let newSelected = {};
-        console.log(this.state.selected)
         if (this.state.selectAll === 0) {
             this.props.data.forEach(x => {
                 newSelected[x.id] = true;
@@ -266,7 +257,6 @@ class GridTableLDR extends React.Component {
     handleSubmit = (values) => {
         this.props.editSave([values.id, ...this.props.editId])
 
-        console.log("why not cancel?") //TODO::cancel이 일로가는구나 버튼이 작아서 잘리네 잘 눌러야함..
         this.setState((state) => {
             this.props.addTmp(this.props.data.map((item) => {
                 return item.id === values.id ? values : item
@@ -293,7 +283,6 @@ class GridTableLDR extends React.Component {
         this.props.openConSelectPopup()
     }
     handleKeyFieldSelect = (ob) => {
-        console.log(ob)
         this.props.setKfOb(ob)
         this.props.openKeySelectPopup()
     }
@@ -326,6 +315,7 @@ class GridTableLDR extends React.Component {
             })
             this.adjustColumn(true)
         } else {
+            console.log(this.state.willRemoved)
             this.state.willRemoved.length && this.state.willRemoved.forEach((id) => {
                 apiProvider.delNormal("rules", parseInt(id)).then(() => this.setState({willRemoved: []}))
             })
@@ -338,7 +328,6 @@ class GridTableLDR extends React.Component {
     }
 
     handleSaveNewVer = () => {
-        console.log(this.props.version)
         const temp = this.state.columns.slice()
         temp.splice(0, 1)
         temp.splice(-1, 1)
@@ -368,7 +357,6 @@ class GridTableLDR extends React.Component {
     }
 
     handleDelete = () => {
-        console.log(Object.keys(this.state.selected))
         Object.keys(this.state.selected).forEach((i) => {
             this.props.delTmp(i);
             this.props.delSave(i);
@@ -391,7 +379,6 @@ class GridTableLDR extends React.Component {
             tp[accessor] = ""
         })
         const i = await apiProvider.getNextId()
-        console.log(i)
         tp.id = i + 1
         // tp.id = this.props.data.length + 1
         this.setState((state) => {
@@ -502,7 +489,7 @@ class GridTableLDR extends React.Component {
                                 return (
                                     <form onSubmit={formProps.handleSubmit}>
                                         <Table
-                                            key={this.props.edited}
+                                            key={[this.props.edited, this.props.refre]}
                                             getTdProps={(state, rowInfo, column) => ({
                                                 onClick: () => (rowInfo !== undefined && this.state.editing) ? this.handleClickPopUp(column.id, rowInfo.original) : undefined
                                             })}
@@ -510,14 +497,14 @@ class GridTableLDR extends React.Component {
                                                 this.state.columns
                                             }
                                             {...tableProps}
-                                            defaultPageSize={2}
+                                            defaultPageSize={5}
                                             data={this.props.data}
                                             sorted={[{id: 'id'}]}
 
                                             // defaultPageSize={10}
                                         />
-                                        {this.props.selectKPop && <SelectKeyFieldPopup></SelectKeyFieldPopup>}
-                                        {this.props.selectCPop && <SelectConfirmsPopup></SelectConfirmsPopup>}
+                                        {this.props.selectKPop && <SelectKeyFieldPopup/>}
+                                        {this.props.selectCPop && <SelectConfirmsPopup/>}
                                         {this.props.openReleasePop && <ReleasePopup name="history/livedetectrule"
                                                                                     handleSave={this.handleSave}> </ReleasePopup>}
                                     </form>

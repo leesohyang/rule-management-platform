@@ -1,28 +1,17 @@
 import React from "react";
-import set from "lodash/fp/set"; //얘는 지우고
-import { Field } from "redux-form";
-// import Table from "react-table";
 import Table from "react-table"
-import * as BS from "react-bootstrap";
-import initialData from "./dataFactory";
-import FormProvider from "./FormProvider";
-import { avatarColumnProps } from "./AvatarCell";
-import ActionsCell from "./ActionsCell";
-import HighlightCell from "./HighlightCell";
-import GridFilters from "./GridFilters";
-import {useSelector} from "react-redux";
 import {connect} from "react-redux"
-import fetchAPI from "../../services/Redux/reducers/fetchAPI";
-// import 'react-table/react-table.css';
-import {currEd, dataSave, deleteTmp, getAllR, hisFlag, restoreHead} from "../../services/Redux/actions";
+import {currEd, dataSave, deleteTmp, hisFlag, restoreHead} from "../../services/Redux/actions";
 import { bindActionCreators } from 'redux';
 import {addTmp, revRe, openPop} from "../../services/Redux/actions";
-import Pagination from "./Pagination";
 import "./style.scss"
 
 
+
 class GridTableH extends React.Component {
-    state = { editing: null, selected:{}, selectAll:0, adding:false};
+
+
+    state = { checked: false, editing: null, selected:{}, selectAll:0, adding:false};
     componentDidMount() {
         this.props.handleData()
     }
@@ -36,19 +25,18 @@ class GridTableH extends React.Component {
             this.props.hisFlag(false)
         }
         if(this.props.refre && ref){
-            console.log("hi?")
             this.props.handleData()
             this.props.revRe(false)
         }
-        // if(ref){
-            //checkbox 해제해놓기
-        // }
     }
+
+    handleChecked = (rowData) => {
+        return rowData == this.props.curr
+    }
+
     columns = [
         { Header: "No",
-            // accessor:"id",
             Cell: ({row}) => {
-            // console.log(flatRows)
             return row._viewIndex + 1;
             }
         },
@@ -66,10 +54,7 @@ class GridTableH extends React.Component {
                     <input
                         type="checkbox"
                         className="checkbox"
-                        // checked={this.state.selected[original.id] === true}
-                        checked={row._viewIndex == this.props.curr}
-                        // checked={true}
-                        // onChange={() => this.toggleRow(original.id)}
+                        checked={this.handleChecked(row._viewIndex)}
                     />
                 );
             }},
@@ -86,7 +71,7 @@ class GridTableH extends React.Component {
         },
     ];
 
-    handleRestore = (cell, test) => {
+    handleRestore = (cell) => {
         this.props.currEd(cell._viewIndex, cell._original)
         switch (this.props.name) {
             case "normalizerule":
@@ -96,7 +81,6 @@ class GridTableH extends React.Component {
                     }
                 ))
             case "livedetectrule":
-                const hisId = cell._original.id //이걸 저장해놔야함.
                 const tmp = cell._original.value.map(({conditions, ...other})=>{
                     const tp = {};
                     conditions.forEach(
@@ -107,7 +91,6 @@ class GridTableH extends React.Component {
                     return Object.assign({}, other, tp)
                 })
                 this.props.addTmp(tmp)
-                console.log(tmp)
                 this.props.dataSave(tmp)
                 return this.props.resHead(true)
 
@@ -132,8 +115,6 @@ class GridTableH extends React.Component {
 
 
     render() {
-        console.log(this.historyCond(this.props.name))
-        console.log(this.props.curr)
         return (
             <React.Fragment>
 

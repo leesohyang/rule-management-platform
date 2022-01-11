@@ -1,4 +1,4 @@
-package com.sample.data
+package com.sample.utils
 
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json

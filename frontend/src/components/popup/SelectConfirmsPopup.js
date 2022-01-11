@@ -1,35 +1,23 @@
-import React, {useEffect} from 'react'
-import {convertHex2Str} from "../util/utils";
-import {useDispatch, useSelector} from "react-redux"
-import {
-    addedField, addTmp,
-    currType,
-    hisFlag, keyFieldSelect,
-    openPop, openSelectConFieldPop,
-    openSelectKeyFieldPop,
-    openSelectPop
-} from "../../services/Redux/actions";
-import {apiProvider} from "../../services/Provider";
-import {Field, change} from "redux-form";
+import React from 'react'
+import { useDispatch, useSelector} from "react-redux"
+import { openSelectConFieldPop} from "../../services/Redux/actions";
+import { change} from "redux-form";
 import Table from "react-table";
 
 import "../table/style.scss"
 
-export default function SelectConfirmsPopup(props) {
+export default function SelectConfirmsPopup() {
 
     //TODO:: submit 누르면 dispatch(change)) 하기.
     const kfOb = useSelector(state => state.fetchAPI.keyField)
     const headers = useSelector(state => state.fetchAPI.header)
-    const [selectKey, setSelectKey] = React.useState("")
+    // const [selectKey, setSelectKey] = React.useState("")
 
     const [selField, setSelField] = React.useState("")
     const [selConType, setSelConType] = React.useState("")
-
-
     const [data, setData] = React.useState([])
 
     const conType = ["String", "Numeric", "IP"]
-
     const columns = [
         {Header: "Field", accessor: "field"},
         {Header: "Condition Type", accessor: "conType"}
@@ -38,7 +26,7 @@ export default function SelectConfirmsPopup(props) {
     const condList = ({id, active, ruletype, keyfield, confirms, ...other}) => {
         const li = Object.keys(other).filter(it => other[it] !== "")
         return !li.length ?
-            headers.slice().map(({Header}) => Header).filter(it => ["id", "active", "ruletype", "keyfield", "confirms"].indexOf(it) === -1) : li
+            headers.slice().map(({Header}) => Header).filter(it => ["id", "active", "ruletype", "keyfield", "confirms", "updatedat", "ver"].indexOf(it) === -1) : li
     }
 
     const dispatch = useDispatch();
@@ -96,7 +84,7 @@ export default function SelectConfirmsPopup(props) {
                         <tr>
                             <th>Select Field</th>
                             <th>Select Condition Type</th>
-                            <th></th>
+                            <th/>
                         </tr>
                         </thead>
                         <tbody>
@@ -108,7 +96,7 @@ export default function SelectConfirmsPopup(props) {
                                         setSelField(e.target.value);
                                     }}
                                 >
-                                    <option></option>
+                                    <option/>
                                     {condList(kfOb).map(
                                         (item, index) => (
                                             <option key={index} value={item}>{item}</option>
@@ -123,7 +111,7 @@ export default function SelectConfirmsPopup(props) {
                                         setSelConType(e.target.value);
                                     }}
                                 >
-                                    <option></option>
+                                    <option/>
                                     {conType.map(
                                         (item, index)=>(
                                             <option key={index} value={item}>{item}</option>
@@ -158,8 +146,6 @@ export default function SelectConfirmsPopup(props) {
                 </div>
 
             </div>
-
-
         </div>
     )
 }

@@ -1,6 +1,7 @@
 package com.sample.data.release
 
-import com.sample.data.jsonb
+import com.sample.utils.jsonb
+import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
@@ -12,6 +13,11 @@ data class Release(
     val value: ReleaseData,
     val desc: String,
     val updatedAt: String?,
+)
+
+@Serializable
+data class ReleaseData(
+    val release: ArrayList<Map<String, String>>,
 )
 
 object ReleaseTable : IntIdTable() {

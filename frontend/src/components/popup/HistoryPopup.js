@@ -31,7 +31,6 @@ export default function HistoryPopup(props) {
                 setState(res.data.value);
                 setSigDef(res.data.signal);
             }
-            // console.log(res)
         )
     }, [])
 

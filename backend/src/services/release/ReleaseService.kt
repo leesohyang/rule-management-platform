@@ -1,4 +1,4 @@
-package com.sample.services
+package com.sample.services.release
 
 import com.sample.data.release.Release
 import com.sample.data.release.ReleaseEntity
@@ -7,30 +7,39 @@ import com.sample.utils.formatter
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.LocalDateTime
 
-
+/**
+ * Service class for Release transaction
+ * @version 1.0.0
+ */
 class ReleaseService {
-    fun selectAll(): Iterable<Release> = transaction {
-        ReleaseEntity.all().map(ReleaseEntity::toRelease)
-    }
 
-    //TODO:: limit 쿼리로 바꿀것
+    /**
+     * Transaciton to select 10 rows sorted by updatedAt from database
+     * Used Kotlin Exposed DAO
+     */
     fun selectPart(): Iterable<Release> = transaction{
-
-
         val tmp = ReleaseEntity.all().map(ReleaseEntity::toRelease).sortedByDescending { it.updatedAt }
-
-        if(tmp.size > 10) {
-            println("hi"+tmp.last())
+        if (tmp.size > 10) {
             ReleaseEntity.find { ReleaseTable.id eq tmp.last().id }.firstOrNull()?.delete()
         }
         tmp.filterIndexed{index, item -> index < 10}
 
     }
 
+    /**
+     * Transaciton to select release by id from database
+     * Used Kotlin Exposed DAO
+     * @param id    Int, release id
+     */
     fun select(id: Int): Release = transaction {
         ReleaseEntity.find { ReleaseTable.id eq id}.firstOrNull()?.toRelease() ?: throw Exception("Not in Field.")
     }
 
+    /**
+     * Transaciton to update release
+     * Used Kotlin Exposed DAO
+     * @param release   Release data class
+     */
     fun update(release: Release) = transaction {
         val now: String = LocalDateTime.now().format(formatter).toString()
         ReleaseEntity.find { ReleaseTable.id eq release.id}.firstOrNull()?.apply {
@@ -40,19 +49,17 @@ class ReleaseService {
         }
     }
 
+    /**
+     * Transaciton to insert release to database
+     * Used Kotlin Exposed DAO
+     * @param release   Release data class
+     */
     fun insert(release: Release) = transaction {
         val now: String = LocalDateTime.now().format(formatter).toString()
-        val temp = ReleaseEntity.new {
+        ReleaseEntity.new {
             this.desc = release.desc
             this.updatedAt = now
             this.value = release.value
         }
     }
-//
-//    fun delete(ids: Iterable<Int>) = transaction {
-//        ids.forEach { id ->
-//            FieldEntity.find { ReleaseTable.id eq id }.firstOrNull()?.delete()
-////            NodeEntity[id].delete()
-//        }
-//    }
 }

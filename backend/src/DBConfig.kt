@@ -4,7 +4,7 @@ import com.sample.data.header.HeaderTable
 import com.sample.data.history.HistoryLDRTable
 import com.sample.data.release.ReleaseFormTable
 import com.sample.data.release.ReleaseTable
-import com.sample.services.LiveDetectRuleTable
+import com.sample.data.rules.LiveDetectRuleTable
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import io.ktor.application.Application

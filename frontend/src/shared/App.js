@@ -1,22 +1,19 @@
-import React, { Component } from 'react';
-import {BrowserRouter, Route} from 'react-router-dom';
-import { Home, About } from '../pages';
-import {CssBaseline} from "@material-ui/core";
+import React from 'react';
+import {BrowserRouter} from 'react-router-dom';
 import MainAppBar from "../components/main/MainAppBar";
 import Navigator from "../components/main/Navigator";
-import {makeStyles} from "@material-ui/core";
 import MainContents from "../components/main/MainContents";
 import '../components/styles/styles.scss'
 import {apiProvider} from "../services/Provider";
 
 
-async function inits(){
-    await apiProvider.initHead().then(()=>console.log("initHead"))
-    await apiProvider.initRelForm().then(()=>console.log("initRelForm"))
+async function inits() {
+    await apiProvider.initHead()
+    await apiProvider.initRelForm()
 }
 
 function App() {
-    inits().then(()=>console.log("done!"));
+    inits().then(r => console.log("Init tables"));
 
     return (
         <React.Fragment>
@@ -24,9 +21,9 @@ function App() {
             <BrowserRouter initialEntries={['/']} initialIndex={0}>
                 <div className="navbar">
                     <div className="navbar__logo">
-                        <div className="logo" />
+                        <div className="logo"/>
                     </div>
-                    <MainAppBar />
+                    <MainAppBar/>
                 </div>
 
 
@@ -43,15 +40,12 @@ function App() {
                         </div>
                     </nav>
 
-                    <MainContents />
+                    <MainContents/>
 
                 </div>
             </BrowserRouter>
         </React.Fragment>
-
-        // </div>
-
-
     );
 }
+
 export default App;

@@ -4,7 +4,6 @@ import org.apache.curator.framework.CuratorFramework
 import org.apache.curator.framework.CuratorFrameworkFactory
 import org.apache.curator.retry.RetryOneTime
 
-// fun toZKFunList ....
 fun toZKSignalFun(path:String, signal:String){
 
     val curatorFramework: CuratorFramework =
@@ -32,7 +31,6 @@ fun toZKFun(data: String, path: String, byte: Int, child: Boolean) {
         CuratorFrameworkFactory.builder().connectString("127.0.0.1:2181").retryPolicy(RetryOneTime(2000)).build()!!
     curatorFramework.start()
 
-//    val testBytes = substringByBytes(data, 0 , byte)!!
     val testBytes = makeByteArray(data, byte)
 
     var count = 0
@@ -45,7 +43,6 @@ fun toZKFun(data: String, path: String, byte: Int, child: Boolean) {
 
     curatorFramework.create().forPath(path)
 
-    //TODO:: lock?
     testBytes.forEach {
         if (child) {
             val childPath = "$path/$count"
@@ -57,6 +54,8 @@ fun toZKFun(data: String, path: String, byte: Int, child: Boolean) {
             curatorFramework.setData().forPath(path, it)
         }
     }
+
+
 }
 
 fun makeByteArray(str: String, subByte: Int): Iterable<ByteArray> {
@@ -65,8 +64,7 @@ fun makeByteArray(str: String, subByte: Int): Iterable<ByteArray> {
 
     var beginBytes: Int = 0
 
-    //TODO:: 간헐적 원인불명 무한루프 발생
-    while (beginBytes <= len) {
+    while (beginBytes < len) {
         if(subByte==0) break
         substringByBytes(str, beginBytes, subByte)?.let {
             ma.add(it)
@@ -91,7 +89,7 @@ fun substringByBytes(str: String, beginBytes: Int, subBytes: Int): ByteArray? {
     var curBytes = 0
     var ch: String?
 
-    for (i in 0..len-1) {
+    for (i in 0 until len) {
         ch = str.substring(i, i + 1);
         curBytes += ch.toByteArray().size
 

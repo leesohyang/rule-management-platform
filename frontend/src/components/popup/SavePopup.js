@@ -1,21 +1,9 @@
-import React, {useEffect} from 'react'
-import {convertHex2Str} from "../util/utils";
-import {useDispatch, useSelector} from "react-redux"
-import {
-    addedField, addTmp,
-    currType,
-    hisFlag, keyFieldSelect,
-    openPop, openSavePop, openSelectConFieldPop,
-    openSelectKeyFieldPop,
-    openSelectPop, saveVersion
-} from "../../services/Redux/actions";
-import {apiProvider} from "../../services/Provider";
-import {Field, change} from "redux-form";
-import Table from "react-table";
-
+import React from 'react'
+import { useDispatch} from "react-redux"
+import { openSavePop, saveVersion } from "../../services/Redux/actions";
 import "../table/style.scss"
 
-export default function SavePopup(props) {
+export default function SavePopup() {
 
     const [version, setVersion] = React.useState("")
     const dispatch = useDispatch();
@@ -24,7 +12,6 @@ export default function SavePopup(props) {
         dispatch(openSavePop(false))
     }
     const handleSave = () => {
-        //version 저장
         dispatch(saveVersion(version))
         dispatch(openSavePop(false))
     }
@@ -50,7 +37,7 @@ export default function SavePopup(props) {
                 className="popup__body release-option-popup"
             >
                 <div className="release-option-wrap">
-                    <div className="release-option-tab"></div>
+                    <div className="release-option-tab"/>
                     <div>
                         <label> Fields Version Set </label>
                         <input
@@ -70,7 +57,6 @@ export default function SavePopup(props) {
                     cancel
                 </button>
                 <button className="btn btn--blue" onClick={()=>handleSave()}>
-                    {/*<IntlMessages id="save" />*/}
                     save
                 </button>
             </div>

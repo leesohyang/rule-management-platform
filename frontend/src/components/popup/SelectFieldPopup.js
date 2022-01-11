@@ -1,28 +1,8 @@
-import React, {useEffect} from 'react'
-// import { Dialog, DialogTitle, DialogContent, makeStyles, Typography } from '@material-ui/core';
-// import { makeStyles } from "@material-ui/core";
-// import Controls from "./controls/Controls";
-// import CloseIcon from '@material-ui/icons/Close';
-import { convertHex2Str } from "../util/utils";
-import {useDispatch, useSelector} from "react-redux";
-import {addedField, currType, hisFlag, openPop, openSelectPop} from "../../services/Redux/actions";
-import {apiProvider} from "../../services/Provider";
-import isEqual from 'lodash.isequal';
-// const useStyles = makeStyles(theme => ({
-//     dialogWrapper: {
-//         padding: theme.spacing(2),
-//         position: 'absolute',
-//         top: theme.spacing(5),
-//         maxWidth: 450
-//     },
-//     dialogTitle: {
-//         paddingRight: '0px'
-//     }
-// }))
+import React from 'react'
+import { useDispatch} from "react-redux";
+import { addedField, openSelectPop} from "../../services/Redux/actions";
 
-export default function SelectFieldPopup(props) {
-
-
+export default function SelectFieldPopup() {
     const colList = ["test1", "test2", "test3", "test4"]; //field list api
     const [addField, setAddField] = React.useState();
 
@@ -59,13 +39,13 @@ export default function SelectFieldPopup(props) {
                 className="popup__body release-option-popup"
             >
                 <div className="release-option-wrap">
-                    <div className="release-option-tab"></div>
+                    <div className="release-option-tab"/>
                     <div>
                         <label>Select Field to Add : </label>
                         <select
                             onChange = { (event) => setAddField(event.target.value)}
                         >
-                            <option></option>
+                            <option/>
                             {colList.map(item=>(
                                 <option value={item}> {item} </option>
                             ))}
@@ -83,7 +63,6 @@ export default function SelectFieldPopup(props) {
                     cancel
                 </button>
                 <button className="btn btn--blue" onClick={()=>handleSelect()}>
-                    {/*<IntlMessages id="save" />*/}
                     save
                 </button>
             </div>
