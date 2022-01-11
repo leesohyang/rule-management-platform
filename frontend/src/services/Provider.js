@@ -4,63 +4,6 @@ import {getAllH, getAllHL, getAllHN, getAllR, selectHead} from "./Redux/actions"
 
 const BASE_URL = 'http://10.250.238.169:8096/api/v1/'
 
-function getAllRedux(type) {
-    return async (dispatch) => {
-        await axios
-            .get(BASE_URL + type + '/selectall')
-            .then(response => {
-                switch (type) {
-                    case "normalizerule":
-                        return dispatch(getAllR(response.data.map(
-                            ({vendors, ...other}) => {
-                                return {vendors: vendors.join(',').toString(), ...other}
-                            }
-                        )))
-                    default:
-                        return dispatch(getAllR(response.data))
-                }
-            })
-            .catch(error => {
-                throw(error);
-            })
-    }
-}
-
-function getNormalizeRuleFilter(obj) {
-    return async (dispatch) => {
-        await axios
-            .post(BASE_URL + 'normalizerule/selectAllFilters', obj)
-            .then(response => {
-                return dispatch(getAllR(response.data.slice().map(
-                    ({vendors, ...other}) => {
-                        return {vendors: vendors.join(',').toString(), ...other}
-                    }
-                )))
-            })
-            .catch(error => {
-                throw(error);
-            })
-    }
-}
-
-function getNormalizeRule(offset, limit) {
-    return async (dispatch) => {
-        await axios
-            .get(BASE_URL + 'normalizerule/selectall?offset=' + offset + '&limit=' + limit)
-            .then(response => {
-                console.log(response.data)
-                return dispatch(getAllR(response.data.slice().map(
-                    ({vendors, ...other}) => {
-                        return {vendors: vendors.join(',').toString(), ...other}
-                    }
-                )))
-            })
-            .catch(error => {
-                throw(error);
-            })
-    }
-}
-
 async function getRowCounts(type) {
     return await axios
         .get(BASE_URL + type + '/getrowcount')
@@ -220,18 +163,6 @@ async function signalZk(signals) {
         })
 }
 
-async function parse(parseStr) {
-    return await axios
-        .post(BASE_URL + 'normalizerule/parse', {parseStr})
-        .then(response => {
-            console.log(response)
-            return JSON.parse(decodeURIComponent(response.data.replace(/\+/g, "%20")))
-        })
-        .catch((error) => {
-            console.error(error)
-        })
-
-}
 
 async function releaseZk(options) {
     return await axios
@@ -239,39 +170,6 @@ async function releaseZk(options) {
         .then(response => {
             console.log(response.data)
         })
-        .catch((error) => {
-            console.error(error)
-        })
-}
-
-async function getVendors(enType) {
-    return await axios
-        .get(BASE_URL + 'template/vendors?entity=' + enType)
-        .catch((error) => {
-            console.error(error)
-        })
-}
-
-async function getModels(enType, venType) {
-    return await axios
-        .get(BASE_URL + 'template/models?entity=' + enType + '&vendor=' + venType)
-        .catch((error) => {
-            console.error(error)
-        })
-}
-
-// 추가 가능한 entity list 조회
-async function getEna(enType) {
-    return await axios
-        .get(BASE_URL + 'asset/selectbyquery?entityType=' + enType)
-        .catch((error) => {
-            console.error(error)
-        })
-}
-
-async function getEnd(enType, venType, moType) {
-    return await axios
-        .get(BASE_URL + 'device/selectbyquery?entityType=' + enType + '&vendor=' + venType + '&model=' + moType)
         .catch((error) => {
             console.error(error)
         })
@@ -351,16 +249,6 @@ async function update(type, ob) {
         })
 }
 
-async function del(type, ids) {
-    return await axios
-        .delete(BASE_URL + type + '/delete', {
-            headers: {'Content-Type': 'application/json'},
-            data: ids
-        })
-        .catch((error) => {
-            console.error(error)
-        })
-}
 
 async function delNormal(type, id) {
     console.log(id)
@@ -371,33 +259,16 @@ async function delNormal(type, id) {
         })
 }
 
-async function delAll(type) {
-    return await axios
-        .get('http://10.250.238.169:8096/api/v1/' + type + '/deleteAll')
-        .catch((error) => {
-            console.error(error)
-        })
-}
 
 export const apiProvider = {
     insert,
     update,
-    del,
     delNormal,
-    delAll,
-    getAllRedux,
-    getNormalizeRule,
-    getNormalizeRuleFilter,
     getHead,
     getReleaseForm,
     releaseZk,
-    parse,
     signalZk,
     getAll,
-    getVendors,
-    getModels,
-    getEna,
-    getEnd,
     setHistory,
     getLiveRules,
     getLiveRulesFilter,
