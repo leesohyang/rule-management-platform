@@ -2,7 +2,7 @@ buildscript {
     repositories {
         jcenter()
     }
-    
+
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.31"
         classpath "org.jetbrains.kotlin:kotlin-serialization:1.5.31"
@@ -67,7 +67,7 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2"
 
     // Parser Tools
-    implementation "com.secudium.tools:ParserTool:1.0.1"
+//    implementation "com.secudium.tools:ParserTool:1.0.1"
 
     testImplementation "io.ktor:ktor-server-tests:$ktor_version"
 

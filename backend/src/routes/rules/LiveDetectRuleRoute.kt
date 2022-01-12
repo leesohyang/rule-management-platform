@@ -22,9 +22,16 @@ import kotlin.collections.ArrayList
  */
 fun Route.livedetectrule() {
 
+    /**
+     * Binding LiveDetectRuleService
+     */
     val liveDetectRuleService by di().instance<LiveDetectRuleService>()
 
+    /**
+     * LiveDetectRule Routing
+     */
     route("/rules") {
+
         get("/next_id") {
             val result = liveDetectRuleService.selectNextID()
             println(result)
