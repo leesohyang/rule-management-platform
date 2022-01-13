@@ -1,7 +1,7 @@
 {
-  "name": "frontend project",
-  "version": "1.0.0",
-  "description": "frontend project api doc",
-  "title": "Secudium Admin UI",
-  "url" : "https://api/v1"
+  "name": "Admin UI",
+  "version": "0.1.0",
+  "description": "Admin UI api doc in Provider.js",
+  "title": "Admin UI",
+  "url" : "https:/localhost:8096/api/v1/"
 }

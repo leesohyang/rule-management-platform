@@ -379,7 +379,8 @@ class GridTableLDR extends React.Component {
             tp[accessor] = ""
         })
         const i = await apiProvider.getNextId()
-        tp.id = i + 1
+        tp.id = Math.max(i, ...this.props.data.slice().map(v => v.id)) + 1;
+        // tp.id = i + 1
         // tp.id = this.props.data.length + 1
         this.setState((state) => {
             return {...state, editing: tp, adding: true}
