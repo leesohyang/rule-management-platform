@@ -1,10 +1,10 @@
-package com.sample.services.release
+package com.sample.services.releaseform
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import com.sample.data.release.ReleaseForm
-import com.sample.data.release.ReleaseFormEntity
-import com.sample.data.release.ReleaseFormTable
+import com.sample.data.releaseform.ReleaseForm
+import com.sample.data.releaseform.ReleaseFormEntity
+import com.sample.data.releaseform.ReleaseFormTable
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.io.File
 

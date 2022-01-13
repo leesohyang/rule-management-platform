@@ -1,4 +1,4 @@
-package com.sample.data.release
+package com.sample.data.releaseform
 
 import com.sample.utils.jsonb
 import kotlinx.serialization.Serializable

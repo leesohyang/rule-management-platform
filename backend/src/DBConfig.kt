@@ -2,8 +2,7 @@ package com.sample
 
 import com.sample.data.header.HeaderTable
 import com.sample.data.history.HistoryLDRTable
-import com.sample.data.release.ReleaseFormTable
-import com.sample.data.release.ReleaseTable
+import com.sample.data.releaseform.ReleaseFormTable
 import com.sample.data.rules.LiveDetectRuleTable
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
@@ -30,7 +29,6 @@ fun Application.initDB() {
 private fun createTables() = transaction {
     SchemaUtils.create(
         HistoryLDRTable,
-        ReleaseTable,
         ReleaseFormTable,
         HeaderTable,
         LiveDetectRuleTable

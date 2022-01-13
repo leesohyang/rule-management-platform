@@ -6,8 +6,8 @@ import com.sample.utils.toZKFun
 import com.sample.utils.toZKSignalFun
 import io.ktor.application.*
 import io.ktor.http.*
-import com.sample.data.release.Options
-import com.sample.data.release.Signals
+import com.sample.data.rules.Options
+import com.sample.data.rules.Signals
 import com.sample.data.rules.LiveDetectRule
 import io.ktor.request.*
 import io.ktor.response.*
