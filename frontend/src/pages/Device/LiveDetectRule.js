@@ -32,13 +32,6 @@ const LiveDetectRule = () => {
         // handleData()
     }, [])
 
-    const handleUpdate = (data) => {
-        apiProvider.update("rules", data).then(() => dispatch(revRe(true)))
-    }
-    const addOrEdit = (data, ver) => {
-        apiProvider.insertLiveDetect(data, ver)
-    }
-
     const editOrDelete = (id) => {
         apiProvider.del("field", id).then(() => {
             dispatch(revRe(true))
@@ -93,12 +86,10 @@ const LiveDetectRule = () => {
 
                 <GridTableLDR
                     handleData={handleData}
-                    addf={addOrEdit}
                     delete={editOrDelete}
                     insertHead={insertHead}
                     activeHead={activeHead}
                     handleHeadVer={handleHeadVer}
-                    update={handleUpdate}
                     columns={
                         headers
                     }
