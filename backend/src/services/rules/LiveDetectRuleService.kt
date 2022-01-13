@@ -215,7 +215,7 @@ class LiveDetectRuleService {
      * Transaction to get count of specific LiveDetectRule rows from database with filter
      * Used Kotlin Exposed SQL Transaction Manager
      * @param filters   filter rule string
-     * @return result   row count
+     * @return          row count
      */
     fun getCountFilters(filters: String) = transaction {
         var result: Int = 0
@@ -229,7 +229,7 @@ class LiveDetectRuleService {
     /**
      * Transaction to get row count of LiveDetectRule from database
      * Used Kotlin Exposed SQL Transaction Manager
-     * @return result   row count
+     * @return      row count
      */
     fun getCountRows() = transaction {
         var result: Int = 0 //다른방법은 없나
@@ -245,7 +245,7 @@ class LiveDetectRuleService {
      * Used Kotlin Exposed SQL Transaction Manager
      * @param offset    offset num to string
      * @param limit     limit num to string
-     * @return result   arrayList of LiveDetectRule
+     * @return          arrayList of LiveDetectRule
      */
     fun select(offset: String, limit: String) = transaction {
         val result = arrayListOf<LiveDetectRule>()
@@ -275,7 +275,7 @@ class LiveDetectRuleService {
      * @param offset    offset num to string
      * @param limit     limit num to string
      * @param filters   filter rule string
-     * @return result   arrayList of LiveDetectRule
+     * @return          arrayList of LiveDetectRule
      */
     fun selectFilters(offset: String, limit: String, filters: String) = transaction {
 

@@ -25,7 +25,7 @@ class HistoryLDRService {
      * Used Kotlin Exposed SQL Transaction Manager
      * @param offset    Select query offset
      * @param limit     Select query limit
-     * @return result   Array list of HistoryLDR data class
+     * @return          Array list of HistoryLDR data class
      */
     fun selectAll(offset: String, limit: String) = transaction {
         val result = arrayListOf<HistoryLDR>()

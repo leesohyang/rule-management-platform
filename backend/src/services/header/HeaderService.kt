@@ -43,7 +43,7 @@ class HeaderService {
      * Transaction to change the header to the previously used header
      * Used Kotlin Exposed SQL Transaction Manager
      * @param version   Header version what you want.
-     * @return result   HeaderInfo data class
+     * @return          HeaderInfo data class
      */
     fun restoreHeader(version: String) = transaction {
         var result = HeaderInfo()
@@ -84,7 +84,7 @@ class HeaderService {
     /**
      * Transaction to select activated header from database
      * Used Kotlin Exposed SQL Transaction Manager
-     * @return result   HeaderInfo data class
+     * @return      HeaderInfo data class
      */
     fun selectLiveHeader() = transaction {
         var result = HeaderInfo()
