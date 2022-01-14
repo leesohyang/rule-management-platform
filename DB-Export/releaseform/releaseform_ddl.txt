@@ -1,0 +1,12 @@
+-- Drop table
+
+-- DROP TABLE public.releaseform;
+
+CREATE TABLE public.releaseform (
+	id serial4 NOT NULL,
+	"type" varchar(255) NOT NULL,
+	value jsonb NOT NULL,
+	signal jsonb NOT NULL,
+	CONSTRAINT releaseform_pkey PRIMARY KEY (id)
+);
+

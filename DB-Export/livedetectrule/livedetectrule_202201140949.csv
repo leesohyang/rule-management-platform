@@ -1,0 +1,7 @@
+"id","active","ruletype","keyfield","confirms","conditions","ver","updatedat"
+8,tujkls,fdsa,test,N:test,"[{""field"": ""test"", ""value"": ""fdsafdsa""}]","4.0","2022-01-13 18:59:10"
+4,t,null,null,test1,"[{""field"": ""test"", ""value"": ""geg""}, {""field"": ""test1"", ""value"": ""egeggegeg""}, {""field"": ""test4"", ""value"": ""tet""}]","4.0","2022-01-13 18:59:10"
+6,fsafdsad,td,test1,N:test1,"[{""field"": ""test"", ""value"": ""fdsafdas""}, {""field"": ""test1"", ""value"": ""fdsafdsa""}]","4.0","2022-01-13 18:59:10"
+2,tete,null,null,N:test1,"[{""field"": ""test"", ""value"": ""tet""}, {""field"": ""test4"", ""value"": ""tetet""}, {""field"": ""test1"", ""value"": ""gegeg""}]","4.0","2022-01-13 18:59:10"
+10,fdsafdsa,fdsafdas,test,N:test,"[{""field"": ""test"", ""value"": ""fdsafdsa""}, {""field"": ""test1"", ""value"": ""fdsafdsa""}]","4.0","2022-01-13 18:59:10"
+9,fdsa,fdsa,test,N:test1,"[{""field"": ""test"", ""value"": ""fdsa""}, {""field"": ""test1"", ""value"": ""fdsa""}]","4.0","2022-01-13 18:59:10"

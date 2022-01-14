@@ -611,7 +611,6 @@ async function getNextId() {
  * @apiSuccess 200 OK
  */
 async function delNormal(type, id) {
-    console.log(id)
     return await axios
         .delete(BASE_URL + type + '/delete/' + id)
         .catch((error) => {

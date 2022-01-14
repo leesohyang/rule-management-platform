@@ -1,0 +1,11 @@
+-- Drop table
+
+-- DROP TABLE public."header";
+
+CREATE TABLE public."header" (
+	id serial4 NOT NULL,
+	info jsonb NOT NULL,
+	updatedat varchar(255) NOT NULL,
+	CONSTRAINT header_pkey PRIMARY KEY (id)
+);
+

@@ -1,0 +1,15 @@
+-- Drop table
+
+-- DROP TABLE public.livedetectrule;
+
+CREATE TABLE public.livedetectrule (
+	id serial4 NOT NULL,
+	active varchar(255) NOT NULL,
+	ruletype varchar(255) NOT NULL,
+	keyfield varchar(255) NOT NULL,
+	confirms varchar(255) NOT NULL,
+	conditions jsonb NOT NULL,
+	ver varchar(255) NOT NULL,
+	updatedat varchar(255) NOT NULL,
+	CONSTRAINT livedetectrule_pkey1 PRIMARY KEY (id)
+);

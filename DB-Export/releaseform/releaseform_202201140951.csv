@@ -1,0 +1,2 @@
+"id","type","value","signal"
+6,Field,"{""nodeSize"": ""30"", ""separator"": ""@"", ""makeSubNode"": ""true"", ""releasePath"": ""/tmp""}","{""path"": ""/signal"", ""signal"": ""test""}"

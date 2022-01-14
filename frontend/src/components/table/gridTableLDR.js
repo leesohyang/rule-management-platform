@@ -292,7 +292,6 @@ class GridTableLDR extends React.Component {
     }
 
     handleGridData = async (version) => {
-        console.log(this.props.openReleasePop)
         const tmp = this.props.data
             .map((item) => {
                 const con = []
@@ -315,7 +314,6 @@ class GridTableLDR extends React.Component {
             })
             this.adjustColumn(true)
         } else {
-            console.log(this.state.willRemoved)
             this.state.willRemoved.length && this.state.willRemoved.forEach((id) => {
                 apiProvider.delNormal("rules", parseInt(id)).then(() => this.setState({willRemoved: []}))
             })
