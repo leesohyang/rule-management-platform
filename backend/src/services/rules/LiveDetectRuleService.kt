@@ -92,7 +92,6 @@ class LiveDetectRuleService {
                 "INSERT INTO historyldr\n" +
                 "(\"desc\", \"user\", \"released\", \"value\", \"updatedat\")\n" +
                 "VALUES('${hisldr.desc}', '${hisldr.user}', '${hisldr.released}', (SELECT json_agg(livedetectrule) FROM livedetectrule), '$now')\n"
-        println(query)
 
         val statement = conn.prepareStatement(query, false)
         statement.executeUpdate()
@@ -199,7 +198,6 @@ class LiveDetectRuleService {
     fun insert(req: LiveDetectRule) = transaction {
         val mapper = jacksonObjectMapper()
         val conn = TransactionManager.current().connection
-        println(req.conditions)
         val query = "INSERT INTO livedetectrule\n" +
                 "(\"active\", \"ruletype\", \"keyfield\", \"confirms\", \"conditions\", \"ver\")\n" +
                 "VALUES('${req.active}', '${req.ruletype}', '${req.keyfield}', '${req.confirms}', '${

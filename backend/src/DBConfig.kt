@@ -13,11 +13,10 @@ import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.LoggerFactory
 
-const val HIKARI_CONFIG_KEY = "ktor.hikariconfig"
+const val HIKARI_CONFIG_KEY = "ktor.ConfigParser"
 
 @KtorExperimentalAPI
 fun Application.initDB() {
-
     val configPath = environment.config.property(HIKARI_CONFIG_KEY).getString()
     val dbConfig = HikariConfig(configPath)
     val dataSource = HikariDataSource(dbConfig)

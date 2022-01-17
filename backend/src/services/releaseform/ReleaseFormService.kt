@@ -26,7 +26,6 @@ class ReleaseFormService {
      */
     fun init() = transaction {
         val count: Long = ReleaseFormEntity.count()
-        println("Count: $count")
         if (count < 1) {
             val wDir = System.getProperty("user.dir")
             val rf = mapper.readValue<ReleaseForm>(File("$wDir/backend/src/utils/ReleaseForm.json"))

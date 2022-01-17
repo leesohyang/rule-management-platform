@@ -37,7 +37,6 @@ class HistoryLDRService {
                 val user = rs.getString("user")
                 val released = rs.getString("released")
                 val value = rs.getArray("value")
-                println(value)
                 val v = mapper.readValue<List<LiveDetectRule>>(value.toString())
                 val updatedat = rs.getString("updatedat")
                 result.add(HistoryLDR(id,desc, user, released, v, updatedat))

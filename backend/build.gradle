@@ -4,18 +4,21 @@ buildscript {
     }
 
     dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:5.2.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.31"
         classpath "org.jetbrains.kotlin:kotlin-serialization:1.5.31"
     }
 }
 
+apply plugin: 'java'
 apply plugin: 'kotlin'
 apply plugin: 'application'
 apply plugin: 'kotlinx-serialization'
+apply plugin: 'com.github.johnrengelman.shadow'
 
 group 'com.sample'
-version '0.0.1'
-mainClassName = "io.ktor.server.netty.EngineMain"
+version '0.1.0'
+mainClassName = 'com.sample.ApplicationKt'
 
 sourceSets {
     main.kotlin.srcDirs = main.java.srcDirs = ['src']
@@ -25,29 +28,20 @@ sourceSets {
 }
 
 repositories {
-    mavenLocal()
     jcenter()
     maven { url 'https://kotlin.bintray.com/ktor' }
 }
 
 dependencies {
-    // POI
-    implementation "org.apache.poi:poi:4.0.1"
-    implementation "org.apache.poi:poi-ooxml:4.0.1"
-
-    // common-io
-    implementation("commons-io:commons-io:2.4")
-    implementation("org.json:json:20210307")
-    implementation 'com.beust:klaxon:5.5'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.31"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    implementation "ch.qos.logback:logback-classic:1.2.10"
     implementation "io.ktor:ktor-server-netty:$ktor_version"
-    implementation "ch.qos.logback:logback-classic:$logback_version"
     implementation "io.ktor:ktor-server-core:$ktor_version"
     implementation "io.ktor:ktor-auth:$ktor_version"
     implementation "io.ktor:ktor-gson:$ktor_version"
 
-    // Kodein
-    implementation "org.kodein.di:kodein-di-framework-ktor-server-jvm:7.0.0"
+    // Database
+    implementation "org.postgresql:postgresql:$postgresql_version"
 
     // Exposed ORM library
     implementation "org.jetbrains.exposed:exposed-core:$exposed_version"
@@ -56,7 +50,13 @@ dependencies {
 
     // JDBC Connection Pool
     implementation "com.zaxxer:HikariCP:$hikari_version"
-    implementation "org.postgresql:postgresql:$postgresql_version"
+
+    // Kodein
+    implementation "org.kodein.di:kodein-di-framework-ktor-server-jvm:7.0.0"
+
+    // JSON
+    implementation "org.json:json:20210307"
+    implementation "com.beust:klaxon:5.5"
 
     // Jackson
     implementation "com.fasterxml.jackson.module:jackson-module-kotlin:$jackson_version"
@@ -64,20 +64,47 @@ dependencies {
     // Kotlinx Serialization
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2"
 
+    // POI
+    implementation "org.apache.poi:poi:4.0.1"
+    implementation "org.apache.poi:poi-ooxml:4.0.1"
+
+    // common-io
+    implementation "commons-io:commons-io:2.4"
+
     // Zookeeper Curator
-    implementation("org.apache.curator:curator-framework:5.2.0")
-    implementation("org.apache.curator:curator-client:5.2.0")
+    implementation "org.apache.curator:curator-framework:$curator_version"
+    implementation "org.apache.curator:curator-client:$curator_version"
 
     // Parser Tools
 //    implementation "com.secudium.tools:ParserTool:1.0.1"
 
     testImplementation "io.ktor:ktor-server-tests:$ktor_version"
 
-
 }
 
-tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
-    kotlinOptions {
-        jvmTarget = "1.8"
+compileKotlin {
+    kotlinOptions.jvmTarget = "13"
+}
+
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "13"
+}
+
+shadowJar {
+    manifest {
+        attributes 'Main-Class': mainClassName
+    }
+    archiveName "Admin-UI-0.1.0.jar"
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': mainClassName
+    }
+    archiveName "Admin-UI-0.1.0.jar"
+    from {
+        configurations.compile.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
     }
 }

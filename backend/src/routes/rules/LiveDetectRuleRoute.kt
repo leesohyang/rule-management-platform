@@ -34,13 +34,11 @@ fun Route.livedetectrule() {
 
         get("/next_id") {
             val result = liveDetectRuleService.selectNextID()
-            println(result)
             call.respond(result)
         }
 
         post("/insert") {
             val req = call.receive<LiveDetectRule>()
-            println(req)
             liveDetectRuleService.insert(req)
             call.respond(HttpStatusCode.OK)
         }
@@ -75,9 +73,9 @@ fun Route.livedetectrule() {
         post("/getFiltersCount"){
             val request = call.receive<Map<String, Any>>()
 
-            val tmp = request.getValue("filters") as Map<String, String>
+            val tmp = request.getValue("filters") as Map<*, *>
             val final = tmp.map{
-                (it.key + " like " + "\'" + it.value + "%\'")
+                (it.key.toString() + " like " + "\'" + it.value + "%\'")
             }.joinToString(" and ")
 
             val result = liveDetectRuleService.getCountFilters(final)
@@ -87,9 +85,9 @@ fun Route.livedetectrule() {
         post("/selectAllFilters"){
             val request = call.receive<Map<String, Any>>()
 
-            val tmp = request.getValue("filters") as Map<String, String>
+            val tmp = request.getValue("filters") as Map<*, *>
             val final = tmp.map{
-                (it.key + " like " + "\'" + it.value + "%\'")
+                (it.key.toString() + " like " + "\'" + it.value + "%\'")
             }.joinToString(" and ")
 
             val result = liveDetectRuleService.selectFilters(request.getValue("offset").toString(), request.getValue("limit").toString(), final)
@@ -110,8 +108,6 @@ fun Route.livedetectrule() {
         post("/zookeeper") {
             val options = call.receive<Options>()
             val data = liveDetectRuleService.selectString(options.separator)
-            println("options: $options")
-            println("data: $data")
             toZKFun(data = data, options.releasePath, options.nodeSize.toInt(), options.makeSubNode.toBoolean())
             call.respond(HttpStatusCode.OK)
         }
@@ -127,7 +123,6 @@ fun Route.livedetectrule() {
         delete("delete/{id}") {
             val rid = call.parameters["id"].toString()
             val result = liveDetectRuleService.delete(rid)
-            println(result)
             call.respond(result)
         }
     }

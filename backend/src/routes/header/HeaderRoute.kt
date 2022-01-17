@@ -33,7 +33,6 @@ fun Route.header() {
         }
         post("/insert") {
             val req = call.receive<HeaderInfo>()
-            println(req)
 //            headerService.deActive() // header type => deActive 시키기
             headerService.insert(req)
             call.respond(HttpStatusCode.OK)

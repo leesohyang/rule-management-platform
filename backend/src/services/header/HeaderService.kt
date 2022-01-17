@@ -63,7 +63,6 @@ class HeaderService {
      * Used Kotlin Exposed SQL Transaction Manager
      */
     fun deActive () = transaction {
-        var result: HeaderInfo = HeaderInfo()
         TransactionManager.current().exec(
             "update \"header\" " +
                     "set info = jsonb_set(info, \'{type}\', \'\"dead\"\', false) where info ->> \'type\'=\'live\'" )

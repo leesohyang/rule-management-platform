@@ -20,15 +20,10 @@ fun Route.releaseForm() {
             call.respond(allHistorys)
         }
 
-//        get("/selectall") {
-//            val allHistorys = historyService.selectPart()
-//            call.respond(allHistorys)
-//        }
         // SELECT
         get("/select") {
             val type = call.parameters["type"].toString() // ?: throw NotFoundException()
             val relForm = releaseFormService.selectByType(type)
-            println(relForm)
             call.respond(relForm)
         }
 
@@ -47,7 +42,6 @@ fun Route.releaseForm() {
         // INSERT
 //        post("/insert") {
 //            val historyRequest = call.receive<History>()
-//            println(historyRequest)
 //            historyService.insert(historyRequest)
 //            call.respond(HttpStatusCode.Accepted)
 //        }
@@ -55,7 +49,6 @@ fun Route.releaseForm() {
         // DELETE
 //        delete("/delete") {
 //            val temp = call.receive<Any>()
-//            println("temp: $temp")
 //            val ids = call.receive<List<String>>().map {id->id.toInt()}
 //            historyService.delete(ids)
 //            call.respond(HttpStatusCode.OK)

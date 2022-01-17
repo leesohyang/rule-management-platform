@@ -37,7 +37,6 @@ fun toZKFun(data: String, path: String, byte: Int, child: Boolean) {
 
     val isExist = (curatorFramework.checkExists().forPath(path) != null)
     if (isExist) {
-        println("Path exist. Delete znode")
         curatorFramework.delete().deletingChildrenIfNeeded().forPath(path)
     }
 
@@ -47,10 +46,8 @@ fun toZKFun(data: String, path: String, byte: Int, child: Boolean) {
         if (child) {
             val childPath = "$path/$count"
             curatorFramework.create().forPath(childPath, it)
-            println("child $count created")
             count += 1
         } else {
-            println("no child")
             curatorFramework.setData().forPath(path, it)
         }
     }
